@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
     "dev-server": "webpack-dev-server --hot --inline --content-base --history-api-fallback",
-    "prestart": "mongod --dbpath data --fork --logpath logs/dblogs.txt && node_modules/.bin/tsc",
+    "prestart": "mongod --dbpath data --fork --logpath logs/dblogs.txt",
     "start": "npm build && nodemon src/app.js",
     "stop": "mongo admin --eval 'db.shutdownServer()' > logs/dblogs.txt"
   },
