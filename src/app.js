@@ -8,6 +8,7 @@ const app = express();
 const router = require('./router');
 const db = require('./db/index');
 const mongoose = require('mongoose');
+const Agenda = require('agenda');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,12 +65,27 @@ app.listen(port, function () {
 
     });
     global.db = mongoose.connect(db.mongo.url);
+    var agenda = new Agenda({db: {address: db.mongo.url}});
 
-    //create job runner
+// or override the default collection name:
+// var agenda = new Agenda({db: {address: mongoConnectionString, collection: 'jobCollectionName'}});
 
+// or pass additional connection options:
+// var agenda = new Agenda({db: {address: mongoConnectionString, collection: 'jobCollectionName', options: {server:{auto_reconnect:true}}}});
 
+// or pass in an existing mongodb-native MongoClient instance
+// var agenda = new Agenda({mongo: myMongoClient});
 
-    // access db from routes
+    agenda.define('delete old users', function(job, done) {
+        console.log("whoot")
+        done()
+    });
+    
+    agenda.on('ready', function() {
+        let job = agenda.create('delete old users');
+        job.repeatEvery('1 second').save();
+        agenda.start();
+    });
 });
 
 console.log(`Listening at http://localhost:${port}`);

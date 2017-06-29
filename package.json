@@ -7,7 +7,7 @@
     "dev-server": "webpack-dev-server --hot --inline --content-base --history-api-fallback",
     "prestart": "mongod --dbpath data --fork --logpath logs/dblogs.txt && node_modules/.bin/tsc",
     "start": "npm build && nodemon src/app.js",
-    "poststop": "mongo admin --eval 'db.shutdownServer()' > logs/dblogs.txt"
+    "stop": "mongo admin --eval 'db.shutdownServer()' > logs/dblogs.txt"
   },
   "keywords": [],
   "author": "",
