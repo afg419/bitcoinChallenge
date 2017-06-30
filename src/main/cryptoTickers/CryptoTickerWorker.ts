@@ -1,21 +1,35 @@
+import { CryptoExchangeRate, ExchangeDao } from "../models/CryptoExchangeRate";
+import { CryptoTickerClient } from "./CryptoTickerClient";
+
 export class CryptoTickerWorker implements JobWorker {
     private readonly clients: CryptoTickerClient[];
 
-    readonly run: () => void = () => { console.log(this.clients); }
+    readonly run: () => void = () => {
+        this.getAndSaveCurrentExchangeRates()
+    };
 
     constructor(clients: CryptoTickerClient[]){
+        console.log("New ticker client!");
         this.clients = clients;
     }
 
-    private getCurrentExchangeRates(): CryptoExchangeRate[] {
-        let toReturn: CryptoExchangeRate[] = [];
+    private getAndSaveCurrentExchangeRates(): void {
+        console.log("beginning get and save pipeline!")
         for( let client of this.clients ){
-            toReturn.concat(client.getCryptoExchange())
+            client.getCryptoExchange()
+                .then(CryptoTickerWorker.validateExchanges)
+                .then(CryptoTickerWorker.saveExchanges)
+                .catch(err => console.log(`Unable to save exchanges for ${client.name}. ${err}`))
         }
-        return toReturn;
     }
 
-    private saveCurrentExchangeRates(currentExchangeRates: CryptoExchangeRate[]){
+    private static validateExchanges(exchangeRates: CryptoExchangeRate[]): CryptoExchangeRate[]{
+        console.log("validating!");
+        return exchangeRates.filter( er => er.valid());
+    }
 
+    private static saveExchanges(validExchangeRates: CryptoExchangeRate[]){
+        console.log("saving!");
+        validExchangeRates.forEach( er => ExchangeDao.create(er));
     }
 }

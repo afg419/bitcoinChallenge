@@ -9,7 +9,7 @@ export class ApplicationConfig {
     };
 
     btcE = {
-        baseUrl: "https://btc-e.com/api/3/ticker/" //append eth_btc-ltc_btc-dsh_btc
+        baseUrl: "https://btc-e.com/api/3/ticker/eth_btc-ltc_btc-dsh_btc" //append eth_btc-ltc_btc-dsh_btc
     };
 
     coinCap = {
@@ -17,8 +17,9 @@ export class ApplicationConfig {
     };
 
     cryptoTickerJob = {
+        shouldRun: true,
         jobName: "get-crypto-ticker-dev",
-        runEvery: '15' //seconds
+        runEvery: '5' //seconds
     };
 }
 

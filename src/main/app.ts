@@ -3,6 +3,8 @@ import { CoinCapTickerClient } from "./cryptoTickers/CoinCapTickerClient";
 import { BTCETickerClient } from "./cryptoTickers/BTCETickerClient";
 import { PoloniexTickerClient } from "./cryptoTickers/PoloniexTickerClient";
 import { CryptoTickerWorker } from "./cryptoTickers/CryptoTickerWorker";
+var fetch = require('node-fetch');
+fetch.Promise = require('bluebird')
 
 const path = require('path');
 
@@ -63,22 +65,23 @@ app.listen(port, function () {
     });
     mongoose.connect(db.mongo.url);
 
-    let cryptoTickerWorker = configureTickerWorker(applicationConfig);
-
-    let runner = new Runnr();
-
-    // runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, cryptoTickerWorker.run);
-    runner.interval("job", "3", {}).job( cryptoTickerWorker.run );
-    runner.begin();
+    if(applicationConfig.cryptoTickerJob.shouldRun){
+        let cryptoTickerWorker = configureTickerWorker(applicationConfig);
+        let runner = new Runnr();
+        runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
+        runner.begin();
+    }
 });
 
 
-function configureTickerWorker(applicationConfig: ApplicationConfig): CryptoTickerWorker{
-    let poloniex: PoloniexTickerClient = new PoloniexTickerClient(applicationConfig.poloniex.baseUrl);
-    let btce: BTCETickerClient = new BTCETickerClient(applicationConfig.btcE.baseUrl);
-    let coinCap: CoinCapTickerClient = new CoinCapTickerClient(applicationConfig.coinCap.baseUrl);
+function configureTickerWorker(applicationConfig: ApplicationConfig): CryptoTickerWorker {
+    let {poloniex, btcE, coinCap, sourceCoins, targetCoins} = applicationConfig;
 
-    return new CryptoTickerWorker([poloniex, btce, coinCap]);
+    let poloniexClient: PoloniexTickerClient = new PoloniexTickerClient(poloniex.baseUrl, sourceCoins, targetCoins);
+    let btceClient: BTCETickerClient = new BTCETickerClient(btcE.baseUrl, sourceCoins, targetCoins);
+    let coinCapClient: CoinCapTickerClient = new CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
+
+    return new CryptoTickerWorker([poloniexClient]); //, btceClient, coinCapClient
 }
 
 console.log(`Listening at http://localhost:${port}`);
