@@ -1,16 +1,22 @@
+import { Job } from "./jobs/Job";
+const Runnr = require('node-runnr');
+import { CoinCapTickerClient } from "./cryptoTickers/CoinCapTickerClient";
+import { BTCETickerClient } from "./cryptoTickers/BTCETickerClient";
+import { PoloniexTickerClient } from "./cryptoTickers/PoloniexTickerClient";
+import { CryptoTickerWorker, crypto } from "./cryptoTickers/CryptoTickerWorker";
 
-import {Job} from "./jobs/Job";
-import {JobRunner} from "./jobs/JobRunner";
 const path = require('path');
-const express = require('express');
+
+import * as express from 'express';
+import router = require("./router");
+
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
 const port = (process.env.PORT || 3000);
 const app = express();
-const router = require('./router');
+// import  from './router';
 const db = require('./db/index');
 const mongoose = require('mongoose');
-const Agenda = require('agenda');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
-    const config = require('../webpack.config.js');
+    const config = require('../../webpack.config.js');
     const compiler = webpack(config);
 
     app.use(webpackHotMiddleware(compiler));
@@ -39,9 +45,10 @@ app.get('/', function (req, res) {
 app.use('/', router);
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
+
 app.listen(port, function () {
     //init db
-    mongoose.connection.on('error',function (err) {
+    mongoose.connection.on('error', function(err) {
         console.error('Mongoose default connection error: ' + err);
         process.exit(1);
     });
@@ -54,29 +61,35 @@ app.listen(port, function () {
         }
 
         console.log(`ready to accept connections on port ${port}`);
-        // log.info(
-        //     '%s v%s ready to accept connections on port %s in %s environment.',
-        //     server.name,
-        //     config.version,
-        //     config.port,
-        //     config.env
-        // );
-
-        // serve up routes to client
-        // require('./routes');
-
     });
     mongoose.connect(db.mongo.url);
 
-    let agenda = new Agenda({db: {address: db.mongo.url}});
+    let job1 = new Job('jobbo', '2', crypto.run);
 
-    let job1: Job = new Job('whoot-job', '5 second', (job, done) => { console.log("whoot"); done(); });
-    let job2: Job = new Job('weep-job', '10 second', (job, done) => { console.log("weep"); done(); });
-    let runner: JobRunner = new JobRunner([job1, job2], agenda)
+    let poloniexApiUrl = "blahblah"
+    let runner = new Runnr();
 
-    agenda.on('ready', function() {
-        runner.start()
-    });
+
+    let ourFunction: () => void = () => {
+        fetch(poloniexApiUrl);
+        let banana = 'banana'
+    };
+
+    runner.interval('get crypto tickers', '3', )
+
+
+    startJobRunner([job1]);
 });
+
+
+function startJobRunner(jobs: Job[]){
+    let runner = new Runnr();
+
+    for( let job of jobs ){
+        runner.interval(job.jobName, job.runEvery, {}).job( job.jobExecution )
+    }
+
+    runner.begin();
+}
 
 console.log(`Listening at http://localhost:${port}`);

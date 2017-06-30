@@ -1,5 +1,5 @@
 const bitcoinConversionRate = require('../models/bitcoinConversionRate')
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 
 function createBitcoinConversionRate(req, res, next) {
     fetch('https://btc-e.com/api/3/ticker/btc_usd-btc_rur')

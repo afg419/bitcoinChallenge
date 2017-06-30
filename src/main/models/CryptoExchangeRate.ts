@@ -1,0 +1,3 @@
+class CryptoExchangeRate {
+    thing: number
+}

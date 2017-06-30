@@ -1,9 +1,9 @@
-export class Job{
+export class Job {
     jobName: string;
     runEvery: string;
-    jobExecution: (job, done) => void
+    jobExecution: () => void;
 
-    constructor(jobName: string, runEvery: string, jobExecution: (job, done) => void){
+    constructor(jobName: string, runEvery: string, jobExecution: () => void){
         this.jobName = jobName;
         this.runEvery = runEvery;
         this.jobExecution = jobExecution;
