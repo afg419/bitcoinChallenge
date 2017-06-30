@@ -15,8 +15,8 @@ export abstract class CryptoTickerClient{
     }
 
     getCryptoExchange(): Promise<CryptoExchangeRate[]> {
-        console.log(this.appendToUrl());
-        return fetch(this.appendToUrl())
+        console.log(this.appendPathToUrl());
+        return fetch(this.appendPathToUrl())
             .then(res => {
                 console.log(res.json())
                 return res.json()
@@ -29,5 +29,5 @@ export abstract class CryptoTickerClient{
     }
 
     abstract normalizeResponse(now: Date, json: any): CryptoExchangeRate[];
-    abstract appendToUrl(): string;
+    abstract appendPathToUrl(): string;
 }

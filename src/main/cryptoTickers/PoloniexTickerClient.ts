@@ -23,7 +23,7 @@ export class PoloniexTickerClient extends CryptoTickerClient {
         return toReturn;
     }
 
-    appendToUrl(): string {
+    appendPathToUrl(): string {
         return this.apiUrl;
     }
 
@@ -37,8 +37,8 @@ export class PoloniexTickerClient extends CryptoTickerClient {
 }
 
 class Key {
-    source: Currency;
-    target: Currency;
+    readonly source: Currency;
+    readonly target: Currency;
 
     constructor(source: Currency, target: Currency){
         this.source = source;

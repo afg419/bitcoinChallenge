@@ -12,7 +12,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
     let underTest = new PoloniexTickerClient(poloniex.baseUrl, sourceCoins, targetCoins);
 
     it('should not customize url', () => {
-        expect(underTest.appendToUrl()).to.equal(underTest.apiUrl)
+        expect(underTest.appendPathToUrl()).to.equal(underTest.apiUrl)
     });
 
     it('should have correct keys', () => {

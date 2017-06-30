@@ -9,7 +9,7 @@ export class CoinCapTickerClient extends CryptoTickerClient {
         super(apiUrl, sourceCurrencies, targetCurrencies);
     }
 
-    appendToUrl(): string {
+    appendPathToUrl(): string {
         return this.apiUrl;
     }
 
