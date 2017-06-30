@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { CoinCapTickerClient } from "../../main/cryptoTickers/CoinCapTickerClient";
 import {BTCETickerClient} from "../../main/cryptoTickers/BTCETickerClient";
 import { testConfig } from "../TestConfig"
 import {Currency} from "../../main/core/Currency";
@@ -31,7 +30,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
         response.forEach(x => {
             expect(x.date).to.eql(now);
             expect(x.apiName).to.eql(underTest.apiName);
-            x.valid()
+            expect(x.valid()).to.eql(true);
         })
     });
 
@@ -42,7 +41,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
         response.forEach(x => {
             expect(x.date).to.eql(now);
             expect(x.apiName).to.eql(underTest.apiName);
-            x.valid()
+            expect(x.valid()).to.eql(true);
         });
         expect(isNullOrUndefined(response.map(x => x.target).find(x => x == Currency.ETH)))
     });

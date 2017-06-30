@@ -31,7 +31,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
         response.forEach(x => {
             expect(x.date).to.eql(now);
             expect(x.apiName).to.eql(underTest.apiName);
-            x.valid()
+            expect(x.valid()).to.eql(true);
         })
     });
 
@@ -42,7 +42,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
         response.forEach(x => {
             expect(x.date).to.eql(now);
             expect(x.apiName).to.eql(underTest.apiName);
-            x.valid()
+            expect(x.valid()).to.eql(true);
         });
         expect(isNullOrUndefined(response.map(x => x.target).find(x => x == Currency.LTC)))
     });

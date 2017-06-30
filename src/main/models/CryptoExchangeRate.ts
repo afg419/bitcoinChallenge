@@ -3,6 +3,7 @@ import {isNullOrUndefined} from "util";
 import { Document, Schema, Model, model} from "mongoose";
 import {Double} from "bson";
 import Doc = Mocha.reporters.Doc;
+import {TypeValidator} from "../core/TypeValidator";
 
 export class CryptoExchangeRate {
     readonly date: Date;
@@ -20,12 +21,11 @@ export class CryptoExchangeRate {
     }
 
     public valid(): boolean {
-        return !(   isNullOrUndefined(this.date)   ||
-                    isNullOrUndefined(this.source) ||
-                    isNullOrUndefined(this.target) ||
-                    isNullOrUndefined(this.rate)   ||
-                    isNullOrUndefined(this.apiName)
-        )
+        return TypeValidator.validDate(this.date)   &&
+               TypeValidator.validCurrency(this.source) &&
+               TypeValidator.validCurrency(this.target) &&
+               TypeValidator.validNumber(this.rate)   &&
+               TypeValidator.validString(this.apiName)
     }
 }
 

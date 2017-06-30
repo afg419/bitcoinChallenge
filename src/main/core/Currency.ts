@@ -1,3 +1,3 @@
-export const enum Currency {
+export enum Currency {
     ETH, DSH, LTC, BTC
 }

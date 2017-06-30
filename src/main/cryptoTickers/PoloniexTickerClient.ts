@@ -2,6 +2,7 @@ import {Currency} from "../core/Currency";
 import { CryptoTickerClient } from "./CryptoTickerClient";
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
+import {TypeValidator} from "../core/TypeValidator";
 
 export class PoloniexTickerClient extends CryptoTickerClient {
     readonly apiName: string = "Poloniex";
@@ -51,10 +52,10 @@ class PoloniexKey {
     }
 
     getKey(): string {
-        return `${PoloniexKey.currencyToKey(this.source)}_${PoloniexKey.currencyToKey(this.target)}`;
+        return `${PoloniexKey.currencyToTextKey(this.source)}_${PoloniexKey.currencyToTextKey(this.target)}`;
     }
 
-    private static currencyToKey(currency: Currency): string {
+    private static currencyToTextKey(currency: Currency): string {
         switch(currency){
             case Currency.BTC:
                 return "BTC";
@@ -74,8 +75,8 @@ class PoloniexResponseBlock {
     valid: boolean = true;
 
     constructor(poloniexBlock){
-        if(isNullOrUndefined(poloniexBlock.lowestAsk) || isNullOrUndefined(poloniexBlock.highestBid)){
-            console.warn("Received a Poloniex block with missing lowest or highest ask information");
+        if(!TypeValidator.validNumber(parseFloat(poloniexBlock.lowestAsk)) || !TypeValidator.validNumber(parseFloat(poloniexBlock.highestBid))){
+            console.warn("Received a Poloniex block with invalid lowest or highest ask information");
             this.valid = false;
         }
 

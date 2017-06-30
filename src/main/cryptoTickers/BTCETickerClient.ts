@@ -2,6 +2,7 @@ import {CryptoTickerClient} from "./CryptoTickerClient";
 import {Currency} from "../core/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
+import {TypeValidator} from "../core/TypeValidator";
 
 export class BTCETickerClient extends CryptoTickerClient {
     readonly apiName: string = "BTC-e";
@@ -38,7 +39,6 @@ export class BTCETickerClient extends CryptoTickerClient {
             }
         }).filter(Boolean)
     }
-
 }
 
 class BTCEKey {
@@ -73,8 +73,8 @@ class BTCEResponseBlock {
     valid: boolean = true;
 
     constructor(btceBlock){
-        if(isNullOrUndefined(btceBlock.buy)){
-            console.warn("Received a BTCE block with no buy information");
+        if(!TypeValidator.validNumber(btceBlock.buy)){
+            console.warn("Received a BTCE block with invalid buy information");
             this.valid = false;
         }
 
