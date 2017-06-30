@@ -2,21 +2,21 @@ import {CryptoTickerClient} from "./CryptoTickerClient";
 import {Currency} from "../core/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
-//eth_btc-ltc_btc-dsh_btc
+
 export class BTCETickerClient extends CryptoTickerClient {
     readonly apiName: string = "BTC-e";
-    readonly exchangeKeys: Key[];
+    readonly exchangeKeys: BTCEKey[];
 
     constructor(apiUrl: string, sourceCurrencies: Currency[], targetCurrencies: Currency[]){
         super(apiUrl, sourceCurrencies, targetCurrencies);
         this.exchangeKeys = this.createKeys(sourceCurrencies, targetCurrencies);
     }
 
-    private createKeys(sourceCurrencies: Currency[], targetCurrencies: Currency[]): Key[]{
-        let toReturn: Key[] = [];
+    private createKeys(sourceCurrencies: Currency[], targetCurrencies: Currency[]): BTCEKey[]{
+        let toReturn: BTCEKey[] = [];
         sourceCurrencies.forEach( source => {
             targetCurrencies.forEach( target => {
-                toReturn.push(new Key(source, target));
+                toReturn.push(new BTCEKey(source, target));
             })
         });
         return toReturn;
@@ -41,7 +41,7 @@ export class BTCETickerClient extends CryptoTickerClient {
 
 }
 
-class Key {
+class BTCEKey {
     readonly source: Currency;
     readonly target: Currency;
 
@@ -51,7 +51,7 @@ class Key {
     }
 
     getKey(): string {
-        return `${Key.currencyToKey(this.target)}_${Key.currencyToKey(this.source)}`;
+        return `${BTCEKey.currencyToKey(this.target)}_${BTCEKey.currencyToKey(this.source)}`;
     }
 
     private static currencyToKey(currency: Currency): string {

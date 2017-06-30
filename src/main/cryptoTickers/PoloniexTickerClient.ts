@@ -1,23 +1,22 @@
 import {Currency} from "../core/Currency";
 import { CryptoTickerClient } from "./CryptoTickerClient";
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
-import {isStrictNullChecksEnabled} from "tslint";
 import {isNullOrUndefined} from "util";
 
 export class PoloniexTickerClient extends CryptoTickerClient {
     readonly apiName: string = "Poloniex";
-    readonly exchangeKeys: Key[];
+    readonly exchangeKeys: PoloniexKey[];
 
     constructor(apiUrl: string, sourceCurrencies: Currency[], targetCurrencies: Currency[]){
         super(apiUrl, sourceCurrencies, targetCurrencies);
         this.exchangeKeys = this.createKeys(sourceCurrencies, targetCurrencies);
     }
 
-    private createKeys(sourceCurrencies: Currency[], targetCurrencies: Currency[]): Key[]{
-        let toReturn: Key[] = [];
+    private createKeys(sourceCurrencies: Currency[], targetCurrencies: Currency[]): PoloniexKey[]{
+        let toReturn: PoloniexKey[] = [];
         sourceCurrencies.forEach( source => {
             targetCurrencies.forEach( target => {
-                toReturn.push(new Key(source, target));
+                toReturn.push(new PoloniexKey(source, target));
             })
         });
         return toReturn;
@@ -29,14 +28,20 @@ export class PoloniexTickerClient extends CryptoTickerClient {
 
     normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
         return this.exchangeKeys.map(key => {
-            return new CryptoExchangeRate(
-                now, key.source, key.target, new PoloniexResponseBlock(json[key.getKey()]).exchangeRate(), this.apiName
-            )
-        });
+            let poloniexBlock = new PoloniexResponseBlock(json[key.getKey()]);
+
+            if(poloniexBlock.valid){
+                return new CryptoExchangeRate(
+                    now, key.source, key.target, poloniexBlock.exchangeRate(), this.apiName
+                )
+            } else {
+                return null;
+            }
+        }).filter(Boolean);
     }
 }
 
-class Key {
+class PoloniexKey {
     readonly source: Currency;
     readonly target: Currency;
 
@@ -46,7 +51,7 @@ class Key {
     }
 
     getKey(): string {
-        return `${Key.currencyToKey(this.source)}_${Key.currencyToKey(this.target)}`;
+        return `${PoloniexKey.currencyToKey(this.source)}_${PoloniexKey.currencyToKey(this.target)}`;
     }
 
     private static currencyToKey(currency: Currency): string {
@@ -66,11 +71,14 @@ class Key {
 class PoloniexResponseBlock {
     readonly lowestAsk: number;
     readonly highestBid: number;
+    valid: boolean = true;
 
     constructor(poloniexBlock){
         if(isNullOrUndefined(poloniexBlock.lowestAsk) || isNullOrUndefined(poloniexBlock.highestBid)){
-            throw "Insufficient data to create exchange rate."
+            console.warn("Received a Poloniex block with missing lowest or highest ask information");
+            this.valid = false;
         }
+
         this.lowestAsk = parseFloat(poloniexBlock.lowestAsk);
         this.highestBid = parseFloat(poloniexBlock.highestBid);
     }
