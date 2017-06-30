@@ -28,6 +28,7 @@ export class PoloniexTickerClient extends CryptoTickerClient {
     }
 
     normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
+        console.log(json);
         return this.exchangeKeys.map(key => {
             let poloniexBlock = new PoloniexResponseBlock(json[key.getKey()]);
 

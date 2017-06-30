@@ -16,10 +16,12 @@ export class CryptoTickerWorker implements JobWorker {
     private getAndSaveCurrentExchangeRates(): void {
         console.log("beginning get and save pipeline!")
         for( let client of this.clients ){
+            console.log(`Using ${client.apiName} to seek out exchanges.`)
+
             client.getCryptoExchange()
                 .then(CryptoTickerWorker.validateExchanges)
                 .then(CryptoTickerWorker.saveExchanges)
-                .catch(err => console.log(`Unable to save exchanges for ${client.name}. ${err}`))
+                .catch(err => console.log(`Unable to save exchanges for ${client.apiName}. ${err}`))
         }
     }
 

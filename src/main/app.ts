@@ -56,7 +56,7 @@ app.listen(port, function () {
 
     mongoose.connection.on('open', function(err) {
         if (err) {
-            console.error(err)
+            console.error(err);
             // log.error('Mongoose default connection error: ' + err);
             process.exit(1);
         }
@@ -66,6 +66,7 @@ app.listen(port, function () {
     mongoose.connect(db.mongo.url);
 
     if(applicationConfig.cryptoTickerJob.shouldRun){
+        console.log("NEW LOGGING");
         let cryptoTickerWorker = configureTickerWorker(applicationConfig);
         let runner = new Runnr();
         runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
@@ -81,7 +82,7 @@ function configureTickerWorker(applicationConfig: ApplicationConfig): CryptoTick
     let btceClient: BTCETickerClient = new BTCETickerClient(btcE.baseUrl, sourceCoins, targetCoins);
     let coinCapClient: CoinCapTickerClient = new CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
 
-    return new CryptoTickerWorker([poloniexClient]); //, btceClient, coinCapClient
+    return new CryptoTickerWorker([poloniexClient, btceClient, coinCapClient]); //, btceClient, coinCapClient
 }
 
 console.log(`Listening at http://localhost:${port}`);

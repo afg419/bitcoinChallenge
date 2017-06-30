@@ -19,12 +19,11 @@ export abstract class CryptoTickerClient{
         console.log(this.appendPathToUrl());
         return fetch(this.appendPathToUrl())
             .then(res => {
-                console.log(res.json())
                 return res.json()
             })
             .then(this.normalizeResponse.bind(this, new Date()))
             .catch(err => {
-                console.error(`Unable to acquire exchanges for ${this.name}. ${err}`);
+                console.error(`Unable to acquire exchanges for ${this.apiName}. ${err}`);
                 throw err
             });
     }

@@ -19,7 +19,7 @@ export class ApplicationConfig {
     cryptoTickerJob = {
         shouldRun: true,
         jobName: "get-crypto-ticker-dev",
-        runEvery: '5' //seconds
+        runEvery: '10' //seconds
     };
 }
 
