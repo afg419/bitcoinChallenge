@@ -1,14 +1,14 @@
-import { Job } from "./jobs/Job";
 const Runnr = require('node-runnr');
 import { CoinCapTickerClient } from "./cryptoTickers/CoinCapTickerClient";
 import { BTCETickerClient } from "./cryptoTickers/BTCETickerClient";
 import { PoloniexTickerClient } from "./cryptoTickers/PoloniexTickerClient";
-import { CryptoTickerWorker, crypto } from "./cryptoTickers/CryptoTickerWorker";
+import { CryptoTickerWorker } from "./cryptoTickers/CryptoTickerWorker";
 
 const path = require('path');
 
 import * as express from 'express';
 import router = require("./router");
+import { applicationConfig, ApplicationConfig } from "./config/ApplicationConfig";
 
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
@@ -35,7 +35,6 @@ if (process.env.NODE_ENV !== 'production') {
         publicPath: config.output.publicPath
     }));
 }
-
 
 app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
 app.get('/', function (req, res) {
@@ -64,32 +63,22 @@ app.listen(port, function () {
     });
     mongoose.connect(db.mongo.url);
 
-    let job1 = new Job('jobbo', '2', crypto.run);
+    let cryptoTickerWorker = configureTickerWorker(applicationConfig);
 
-    let poloniexApiUrl = "blahblah"
     let runner = new Runnr();
 
-
-    let ourFunction: () => void = () => {
-        fetch(poloniexApiUrl);
-        let banana = 'banana'
-    };
-
-    runner.interval('get crypto tickers', '3', )
-
-
-    startJobRunner([job1]);
+    // runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, cryptoTickerWorker.run);
+    runner.interval("job", "3", {}).job( cryptoTickerWorker.run );
+    runner.begin();
 });
 
 
-function startJobRunner(jobs: Job[]){
-    let runner = new Runnr();
+function configureTickerWorker(applicationConfig: ApplicationConfig): CryptoTickerWorker{
+    let poloniex: PoloniexTickerClient = new PoloniexTickerClient(applicationConfig.poloniex.baseUrl);
+    let btce: BTCETickerClient = new BTCETickerClient(applicationConfig.btcE.baseUrl);
+    let coinCap: CoinCapTickerClient = new CoinCapTickerClient(applicationConfig.coinCap.baseUrl);
 
-    for( let job of jobs ){
-        runner.interval(job.jobName, job.runEvery, {}).job( job.jobExecution )
-    }
-
-    runner.begin();
+    return new CryptoTickerWorker([poloniex, btce, coinCap]);
 }
 
 console.log(`Listening at http://localhost:${port}`);

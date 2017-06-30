@@ -1,19 +1,11 @@
-import {CoinCapTickerClient} from "./CoinCapTickerClient";
-import {BTCETickerClient} from "./BTCETickerClient";
-import {PoloniexTickerClient} from "./PoloniexTickerClient";
+export class CryptoTickerWorker implements JobWorker {
+    private readonly clients: CryptoTickerClient[];
 
-export class CryptoTickerWorker {
-    clients: CryptoTickerClient[];
-
-    readonly run: () => void = () => { console.log(this.getClients()); }
+    readonly run: () => void = () => { console.log(this.clients); }
 
     constructor(clients: CryptoTickerClient[]){
         this.clients = clients;
     }
-
-    getClients(): CryptoTickerClient[]{
-        return this.clients;
-    };
 
     private getCurrentExchangeRates(): CryptoExchangeRate[] {
         let toReturn: CryptoExchangeRate[] = [];
@@ -27,14 +19,3 @@ export class CryptoTickerWorker {
 
     }
 }
-
-// interface TypeClass<T> {
-//     getType: () => string;
-//     new (): T;
-// }
-
-let poloniex: PoloniexTickerClient = new PoloniexTickerClient("poloniexURL");
-let btce: BTCETickerClient = new BTCETickerClient("btceUrl");
-let coinCap: CoinCapTickerClient = new CoinCapTickerClient("coinCapUrl");
-
-export let crypto: CryptoTickerWorker = new CryptoTickerWorker([poloniex, btce, coinCap]);

@@ -1,0 +1,3 @@
+interface JobWorker{
+    run: () => void
+}
