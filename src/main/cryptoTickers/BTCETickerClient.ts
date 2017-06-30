@@ -1,9 +1,10 @@
 import {CryptoTickerClient} from "./CryptoTickerClient";
 import {Currency} from "../core/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
+import {isNullOrUndefined} from "util";
 //eth_btc-ltc_btc-dsh_btc
 export class BTCETickerClient extends CryptoTickerClient {
-    readonly name: string = "BTC-E"
+    readonly apiName: string = "BTC-e";
     readonly exchangeKeys: Key[];
 
     constructor(apiUrl: string, sourceCurrencies: Currency[], targetCurrencies: Currency[]){
@@ -26,8 +27,16 @@ export class BTCETickerClient extends CryptoTickerClient {
         return `${this.apiUrl}/${keyPath}`;
     }
 
-    normalizeResponse(now: Date, json:Response): CryptoExchangeRate[] {
-        return [];
+    normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
+        return this.exchangeKeys.map( key => {
+            let btceBlock = new BTCEResponseBlock(json[key.getKey()]);
+
+            if(btceBlock.valid){
+                return new CryptoExchangeRate( now, key.source, key.target, btceBlock.exchangeRate(), this.apiName)
+            } else {
+                return null;
+            }
+        }).filter(Boolean)
     }
 
 }
@@ -56,5 +65,23 @@ class Key {
             case Currency.LTC:
                 return "ltc";
         }
+    }
+}
+
+class BTCEResponseBlock {
+    readonly buy: number;
+    valid: boolean = true;
+
+    constructor(btceBlock){
+        if(isNullOrUndefined(btceBlock.buy)){
+            console.warn("Received a BTCE block with no buy information");
+            this.valid = false;
+        }
+
+        this.buy = btceBlock.buy
+    }
+
+    exchangeRate(): number {
+        return this.buy;
     }
 }

@@ -21,4 +21,17 @@ describe('Gets and Normalizes CryptoExchanges', () => {
     it('should append path of keys to url', () => {
         expect(underTest.appendPathToUrl()).to.equal(underTest.apiUrl+ "/eth_btc-dsh_btc-ltc_btc")
     });
+
+    it('should process data', () => {
+        let now = new Date();
+        let response = underTest.normalizeResponse(now, sampleBtceResponse);
+        expect(response.length).to.equal(underTest.exchangeKeys.length);
+        response.forEach(x => {
+            expect(x.date).to.eql(now);
+            expect(x.apiName).to.eql(underTest.apiName);
+            x.valid()
+        })
+    });
 });
+
+let sampleBtceResponse = JSON.parse(`{"eth_btc":{"high":0.1206,"low":0.11381,"avg":0.117205,"vol":1136.08946,"vol_cur":9726.01176,"last":0.1149,"buy":0.11521,"sell":0.1149,"updated":1498852396},"ltc_btc":{"high":0.01638,"low":0.01567,"avg":0.016025,"vol":436.69558,"vol_cur":27255.36662,"last":0.01609,"buy":0.01614,"sell":0.01609,"updated":1498852396},"dsh_btc":{"high":0.0725,"low":0.06855,"avg":0.070525,"vol":177.70133,"vol_cur":2493.30514,"last":0.07204,"buy":0.07205,"sell":0.07194,"updated":1498852396}}`)

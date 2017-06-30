@@ -26,8 +26,10 @@ describe('Gets and Normalizes CryptoExchanges', () => {
         let now = new Date();
         let response = underTest.normalizeResponse(now, samplePoloniexResponse);
         expect(response.length).to.equal(underTest.exchangeKeys.length);
-        response.map(x => x.date).forEach(date => {
-            expect(date).to.eql(now);
+        response.forEach(x => {
+            expect(x.date).to.eql(now);
+            expect(x.apiName).to.eql(underTest.apiName);
+            x.valid()
         })
     });
 });

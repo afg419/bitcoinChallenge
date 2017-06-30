@@ -4,6 +4,7 @@ var fetch = require('node-fetch');
 
 export abstract class CryptoTickerClient{
     readonly apiUrl: string;
+    readonly apiName: string;
     readonly name: string;
     readonly sourceCurrencies: Currency[];
     readonly targetCurrencies: Currency[];

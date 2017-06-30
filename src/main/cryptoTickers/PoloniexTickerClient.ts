@@ -5,7 +5,7 @@ import {isStrictNullChecksEnabled} from "tslint";
 import {isNullOrUndefined} from "util";
 
 export class PoloniexTickerClient extends CryptoTickerClient {
-    readonly name: string = "Poloniex";
+    readonly apiName: string = "Poloniex";
     readonly exchangeKeys: Key[];
 
     constructor(apiUrl: string, sourceCurrencies: Currency[], targetCurrencies: Currency[]){
@@ -30,7 +30,7 @@ export class PoloniexTickerClient extends CryptoTickerClient {
     normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
         return this.exchangeKeys.map(key => {
             return new CryptoExchangeRate(
-                now, key.source, key.target, new PoloniexResponseBlock(json[key.getKey()]).exchangeRate()
+                now, key.source, key.target, new PoloniexResponseBlock(json[key.getKey()]).exchangeRate(), this.apiName
             )
         });
     }
@@ -69,7 +69,7 @@ class PoloniexResponseBlock {
 
     constructor(poloniexBlock){
         if(isNullOrUndefined(poloniexBlock.lowestAsk) || isNullOrUndefined(poloniexBlock.highestBid)){
-            throw "Insufficient data to create exchange rate"
+            throw "Insufficient data to create exchange rate."
         }
         this.lowestAsk = parseFloat(poloniexBlock.lowestAsk);
         this.highestBid = parseFloat(poloniexBlock.highestBid);
