@@ -1,8 +1,9 @@
 import {Currency} from "../../../api/Currency";
 import { Document, Schema, Model, model} from "mongoose";
 import {TypeValidator} from "../util/TypeValidator";
+import {ICrpytoExchangeRate} from "../../../api/ICrpytoExchangeRate";
 
-export class CryptoExchangeRate {
+export class CryptoExchangeRate implements ICrpytoExchangeRate {
     readonly date: Date;
     readonly source: Currency;
     readonly target: Currency;
