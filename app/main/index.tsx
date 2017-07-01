@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import { render } from 'react-dom'
-import Graph from './components/graph/Graph'
+import {Component} from "react";
 let apiConfig = require('../../api/apiConfig')
 
 class Root extends Component {
@@ -36,7 +36,6 @@ class Root extends Component {
   render() {
     return (
       <div>"YO"</div>
-      // <Graph graphApiResponse={ this.state.apiResponse } handleClick={ this.doSomething }/>
     )
   }
 }

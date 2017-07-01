@@ -5,7 +5,7 @@ module.exports = {
   devtool: '#source-map',
   context: __dirname,
    entry: [
-     './app/index.js'
+     './app/main/index.tsx'
    ],
    output: {
      path: __dirname,
@@ -21,9 +21,9 @@ module.exports = {
        query: {
          presets: ['es2015', 'react']
        }
-     }]
+     }, { test: /\.tsx?$/, loader: 'ts-loader' }]
    },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.json', '.scss', '.css']
+    extensions: ['', '.js', '.jsx', '.json', '.scss', '.css', 'tsx', '.ts']
   }
 };
