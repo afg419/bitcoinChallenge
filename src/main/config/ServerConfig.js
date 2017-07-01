@@ -20,6 +20,12 @@ class ServerConfig {
             jobName: "get-crypto-ticker-dev",
             runEvery: '60' //seconds
         };
+        this.deleteOldTickerJob = {
+            shouldRun: true,
+            jobName: "delete-crypto-ticker-dev",
+            runEvery: '3600',
+            deleteOlderThan: 3600
+        };
     }
 }
 exports.ServerConfig = ServerConfig;

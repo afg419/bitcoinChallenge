@@ -3,6 +3,7 @@ import {CryptoExchangeRate} from "../../models/CryptoExchangeRate";
 import {CryptoExchangeRateDao} from "../../models/schemas/CryptoExchangeRateSchema";
 import * as mongoose from "mongoose";
 import {start} from "repl";
+import {WriteOpResult} from "mongodb";
 
 export class MongoDBClient implements DBClient {
     initializeDb(port, host: string): void {
@@ -34,5 +35,10 @@ export class MongoDBClient implements DBClient {
                 return exchangeRates;
             }
         )
+    }
+
+    deleteExchangesOlderThan(startTime: Date): Promise<WriteOpResult> {
+        return CryptoExchangeRateDao.find({$and:[{date:{$lte:startTime}}]})
+            .remove( exchangeRates => exchangeRates.remove()).exec()
     }
 }

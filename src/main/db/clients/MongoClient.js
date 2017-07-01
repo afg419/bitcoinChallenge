@@ -28,6 +28,10 @@ class MongoDBClient {
             return exchangeRates;
         });
     }
+    deleteExchangesOlderThan(startTime) {
+        return CryptoExchangeRateSchema_1.CryptoExchangeRateDao.find({ $and: [{ date: { $lte: startTime } }] })
+            .remove(exchangeRates => exchangeRates.remove()).exec();
+    }
 }
 exports.MongoDBClient = MongoDBClient;
 //# sourceMappingURL=MongoClient.js.map

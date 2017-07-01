@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Currency;
 (function (Currency) {
     Currency[Currency["ETH"] = 0] = "ETH";
@@ -13,3 +13,4 @@ exports.currencyExchangeRates = {
     LTC: [],
     BTC: []
 };
+//# sourceMappingURL=Currency.js.map

@@ -17,6 +17,7 @@ import {DBClient} from "./db/clients/DBClient";
 import {ExchangeRatesController} from "./controllers/ExchangeRatesController";
 import {Router} from "express";
 import {ApplicationRouter} from "./ApplicationRouter";
+import {DeleteTickerWorker} from "./cryptoTickers/DeleteTickerWorker";
 
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
@@ -68,10 +69,11 @@ app.listen(port, function () {
 
     if(serverConfig.cryptoTickerJob.shouldRun){
         let cryptoTickerWorker = configureTickerWorker(serverConfig, mongoClient);
+        let deleteTickerWorker = configureDeleteTickerWorker(serverConfig, mongoClient);
 
         let runner = new Runnr();
         runner.interval(serverConfig.cryptoTickerJob.jobName, serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
-        // runner.interval(serverConfig.deleteOldTickerJob.jobName, serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
+        runner.interval(serverConfig.deleteOldTickerJob.jobName, serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
 
         runner.begin();
     }
@@ -86,5 +88,10 @@ function configureTickerWorker(applicationConfig: ServerConfig, mongoClient: DBC
 
     return new CryptoTickerWorker([poloniexClient, btceClient, coinCapClient], mongoClient); //, btceClient, coinCapClient
 }
+
+function configureDeleteTickerWorker(applicationConfig: ServerConfig, mongoClient: DBClient): DeleteTickerWorker {
+    return new DeleteTickerWorker(serverConfig.deleteOldTickerJob.deleteOlderThan, mongoClient); //, btceClient, coinCapClient
+}
+
 
 console.log(`Listening at http://localhost:${port}`);

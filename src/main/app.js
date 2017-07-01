@@ -15,6 +15,7 @@ let router = express.Router();
 const ServerConfig_1 = require("./config/ServerConfig");
 const ExchangeRatesController_1 = require("./controllers/ExchangeRatesController");
 const ApplicationRouter_1 = require("./ApplicationRouter");
+const DeleteTickerWorker_1 = require("./cryptoTickers/DeleteTickerWorker");
 const cors = require('express-cors');
 const bodyParser = require('body-parser');
 const port = apiConfig.port; //(process.env.PORT || 3000);
@@ -51,9 +52,10 @@ app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);
     if (ServerConfig_1.serverConfig.cryptoTickerJob.shouldRun) {
         let cryptoTickerWorker = configureTickerWorker(ServerConfig_1.serverConfig, mongoClient);
+        let deleteTickerWorker = configureDeleteTickerWorker(ServerConfig_1.serverConfig, mongoClient);
         let runner = new Runnr();
         runner.interval(ServerConfig_1.serverConfig.cryptoTickerJob.jobName, ServerConfig_1.serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
-        // runner.interval(serverConfig.deleteOldTickerJob.jobName, serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
+        runner.interval(ServerConfig_1.serverConfig.deleteOldTickerJob.jobName, ServerConfig_1.serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
         runner.begin();
     }
 });
@@ -63,6 +65,9 @@ function configureTickerWorker(applicationConfig, mongoClient) {
     let btceClient = new BTCETickerClient_1.BTCETickerClient(btcE.baseUrl, sourceCoins, targetCoins);
     let coinCapClient = new CoinCapTickerClient_1.CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
     return new CryptoTickerWorker_1.CryptoTickerWorker([poloniexClient, btceClient, coinCapClient], mongoClient); //, btceClient, coinCapClient
+}
+function configureDeleteTickerWorker(applicationConfig, mongoClient) {
+    return new DeleteTickerWorker_1.DeleteTickerWorker(ServerConfig_1.serverConfig.deleteOldTickerJob.deleteOlderThan, mongoClient); //, btceClient, coinCapClient
 }
 console.log(`Listening at http://localhost:${port}`);
 //# sourceMappingURL=app.js.map
