@@ -92,6 +92,24 @@ describe('Exchange rate processes', () => {
         expect(dshResponse).to.eql([coinCapCryptos[2], poloniexCryptos[2]]);
     });
 
+    //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
+    it('should ignore missing apis from history', () => {
+        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+
+        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
+        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
+
+        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency.DSH, 0.4); //This guy
+        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
+
+        let history = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        let ethResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
+        let dshResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
+        expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
+        expect(dshResponse).to.eql([poloniexCryptos[2]]);
+    });
+
     let makeCryptoExchangeRate = function(date: Date, apiName: string, target: Currency): ICrpytoExchangeRate {
         return {
             source: Currency.BTC,
@@ -100,7 +118,7 @@ describe('Exchange rate processes', () => {
             apiName: apiName,
             date: date
         }
-    }
+    };
 
     let makeCryptoExchangeRateForRank = function(date: Date, apiName: string, target: Currency, rate: number): ICrpytoExchangeRate {
         return {
