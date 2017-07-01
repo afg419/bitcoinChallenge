@@ -10,4 +10,4 @@ let CryptoExchangeRateSchema: Schema = new Schema({
 }, {timestamps: true});
 
 type CryptoExchangeType = CryptoExchangeRate & Document
-export const ExchangeDao: Model<CryptoExchangeType> = model<CryptoExchangeType>("CryptoExchangeRate", CryptoExchangeRateSchema);
+export const CryptoExchangeRateDao: Model<CryptoExchangeType> = model<CryptoExchangeType>("CryptoExchangeRate", CryptoExchangeRateSchema);

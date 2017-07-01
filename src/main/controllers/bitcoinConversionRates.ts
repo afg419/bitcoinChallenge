@@ -7,7 +7,7 @@ function createBitcoinConversionRate(req, res, next) {
             return res.text();
         }).then(function(body) {
         console.log(body);
-        // bitcoinConversionRate.create( { sourceName: "test source name" } )
+        // bitcoinConversionRate.createExchange( { sourceName: "test source name" } )
     });
 
 }

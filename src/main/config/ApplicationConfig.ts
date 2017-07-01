@@ -4,6 +4,12 @@ export class ApplicationConfig {
     sourceCoins: Currency[] = [ Currency.BTC ];
     targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ];
 
+    defaultMinutesBackForExchangeRateQuery = 60;
+
+    paths = {
+        indexExchangeRatesPath: "/indexExchangeRates"
+    };
+
     poloniex = {
         baseUrl: "https://poloniex.com/public?command=returnTicker"
     };

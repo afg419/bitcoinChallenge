@@ -1,9 +1,10 @@
 import {DBClient} from "./DBClient";
 import {CryptoExchangeRate} from "../../models/CryptoExchangeRate";
-import {ExchangeDao} from "../../models/schemas/CryptoExchangeRateSchema";
+import {CryptoExchangeRateDao} from "../../models/schemas/CryptoExchangeRateSchema";
 import * as mongoose from "mongoose";
+import {start} from "repl";
 
-export class MongoClient implements DBClient {
+export class MongoDBClient implements DBClient {
     initializeDb(port, host: string): void {
         mongoose.connection.on('error', function(err) {
             console.error('Mongoose default connection error: ' + err);
@@ -23,7 +24,15 @@ export class MongoClient implements DBClient {
 
     }
 
-    create(exchangeRate: CryptoExchangeRate): Promise<CryptoExchangeRate> {
-        return ExchangeDao.create(exchangeRate);
+    createExchange(exchangeRate: CryptoExchangeRate): Promise<CryptoExchangeRate> {
+        return CryptoExchangeRateDao.create(exchangeRate);
     };
+
+    getExchangesBetween(startTime: Date, endTime: Date): Promise<CryptoExchangeRate[]>{
+        return CryptoExchangeRateDao.find({$and:[{date:{$lte:startTime}},{date:{$gte:endTime}}]}).exec()
+        .then( exchangeRates => {
+                return exchangeRates;
+            }
+        )
+    }
 }

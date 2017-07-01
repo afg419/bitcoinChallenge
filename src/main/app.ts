@@ -1,4 +1,4 @@
-import {MongoClient} from "./db/clients/MongoClient";
+import { MongoDBClient } from "./db/clients/MongoClient";
 const Runnr = require('node-runnr');
 import { CoinCapTickerClient } from "./cryptoTickers/clients/CoinCapTickerClient";
 import { BTCETickerClient } from "./cryptoTickers/clients/BTCETickerClient";
@@ -7,13 +7,14 @@ import { CryptoTickerWorker } from "./cryptoTickers/CryptoTickerWorker";
 
 var fetch = require('node-fetch');
 fetch.Promise = require('bluebird')
-
 const path = require('path');
-
 import * as express from 'express';
-import router = require("./router");
+let router: Router = express.Router();
 import { applicationConfig, ApplicationConfig } from "./config/ApplicationConfig";
 import {DBClient} from "./db/clients/DBClient";
+import {ExchangeRatesController} from "./controllers/ExchangeRatesController";
+import {Router} from "express";
+import {ApplicationRouter} from "./ApplicationRouter";
 
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
@@ -46,30 +47,27 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '/../index.html'))
 });
 
-app.use('/', router);
+console.log("about to make mongo client");
+let mongoClient = new MongoDBClient();
+
+console.log("about to make controller");
+let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
+    applicationConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
+);
+console.log("Made Controller" + exchangeRatesController);
+console.log("about to make router")
+console.log(applicationConfig)
+let appRouter = new ApplicationRouter(router, applicationConfig.paths, exchangeRatesController);
+
+
+
+
+app.use('/', appRouter.expressRouter);
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
 
 
 app.listen(port, function () {
-    //init db
-    let mongoClient = new MongoClient();
     mongoClient.initializeDb(port, db.mongo.url);
-
-    // mongoose.connection.on('error', function(err) {
-    //     console.error('Mongoose default connection error: ' + err);
-    //     process.exit(1);
-    // });
-    //
-    // mongoose.connection.on('open', function(err) {
-    //     if (err) {
-    //         console.error(err);
-    //         // log.error('Mongoose default connection error: ' + err);
-    //         process.exit(1);
-    //     }
-    //
-    //     console.log(`ready to accept connections on port ${port}`);
-    // });
-    // mongoose.connect(db.mongo.url);
 
     if(applicationConfig.cryptoTickerJob.shouldRun){
         console.log("NEW LOGGING");

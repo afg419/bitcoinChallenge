@@ -35,7 +35,6 @@ export class CryptoTickerWorker implements JobWorker {
 
     private saveExchanges(validExchangeRates: CryptoExchangeRate[]){
         console.log("saving!");
-        console.log(this);
-        validExchangeRates.forEach( er => this.dbClient.create(er));
+        validExchangeRates.forEach( er => this.dbClient.createExchange(er));
     }
 }
