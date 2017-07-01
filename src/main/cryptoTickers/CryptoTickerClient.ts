@@ -5,7 +5,6 @@ var fetch = require('node-fetch');
 export abstract class CryptoTickerClient{
     readonly apiUrl: string;
     readonly apiName: string;
-    readonly name: string;
     readonly sourceCurrencies: Currency[];
     readonly targetCurrencies: Currency[];
 
@@ -18,10 +17,8 @@ export abstract class CryptoTickerClient{
     getCryptoExchange(): Promise<CryptoExchangeRate[]> {
         console.log(this.appendPathToUrl());
         return fetch(this.appendPathToUrl())
-            .then(res => {
-                return res.json()
-            })
-            .then(this.normalizeResponse.bind(this, new Date()))
+            .then(res => res.json())
+            .then(json => this.normalizeResponse(new Date(), json))
             .catch(err => {
                 console.error(`Unable to acquire exchanges for ${this.apiName}. ${err}`);
                 throw err

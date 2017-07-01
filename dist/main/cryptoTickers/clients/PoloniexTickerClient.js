@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Currency_1 = require("../core/Currency");
-const CryptoTickerClient_1 = require("./CryptoTickerClient");
-const CryptoExchangeRate_1 = require("../models/CryptoExchangeRate");
-const TypeValidator_1 = require("../core/TypeValidator");
+const Currency_1 = require("../../core/Currency");
+const CryptoTickerClient_1 = require("../CryptoTickerClient");
+const CryptoExchangeRate_1 = require("../../models/CryptoExchangeRate");
+const TypeValidator_1 = require("../../util/TypeValidator");
 class PoloniexTickerClient extends CryptoTickerClient_1.CryptoTickerClient {
     constructor(apiUrl, sourceCurrencies, targetCurrencies) {
         super(apiUrl, sourceCurrencies, targetCurrencies);
@@ -23,7 +23,6 @@ class PoloniexTickerClient extends CryptoTickerClient_1.CryptoTickerClient {
         return this.apiUrl;
     }
     normalizeResponse(now, json) {
-        console.log(json);
         return this.exchangeKeys.map(key => {
             let poloniexBlock = new PoloniexResponseBlock(json[key.getKey()]);
             if (poloniexBlock.valid) {

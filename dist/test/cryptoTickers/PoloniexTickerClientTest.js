@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const PoloniexTickerClient_1 = require("../../main/cryptoTickers/PoloniexTickerClient");
+const PoloniexTickerClient_1 = require("../../main/cryptoTickers/clients/PoloniexTickerClient");
 const TestConfig_1 = require("../TestConfig");
 const Currency_1 = require("../../main/core/Currency");
 const util_1 = require("util");

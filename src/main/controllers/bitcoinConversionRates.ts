@@ -1,4 +1,3 @@
-const bitcoinConversionRate = require('../models/bitcoinConversionRate')
 // const fetch = require('node-fetch')
 
 function createBitcoinConversionRate(req, res, next) {
@@ -8,7 +7,7 @@ function createBitcoinConversionRate(req, res, next) {
             return res.text();
         }).then(function(body) {
         console.log(body);
-        bitcoinConversionRate.create( { sourceName: "test source name" } )
+        // bitcoinConversionRate.create( { sourceName: "test source name" } )
     });
 
 }

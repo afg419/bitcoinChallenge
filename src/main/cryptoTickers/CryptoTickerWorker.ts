@@ -1,16 +1,19 @@
-import { CryptoExchangeRate, ExchangeDao } from "../models/CryptoExchangeRate";
+import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
 import { CryptoTickerClient } from "./CryptoTickerClient";
+import {DBClient} from "../db/clients/DBClient";
 
 export class CryptoTickerWorker implements JobWorker {
     private readonly clients: CryptoTickerClient[];
+    private readonly dbClient: DBClient;
 
     readonly run: () => void = () => {
         this.getAndSaveCurrentExchangeRates()
     };
 
-    constructor(clients: CryptoTickerClient[]){
+    constructor(clients: CryptoTickerClient[], dbClient: DBClient){
         console.log("New ticker client!");
         this.clients = clients;
+        this.dbClient = dbClient;
     }
 
     private getAndSaveCurrentExchangeRates(): void {
@@ -19,19 +22,20 @@ export class CryptoTickerWorker implements JobWorker {
             console.log(`Using ${client.apiName} to seek out exchanges.`)
 
             client.getCryptoExchange()
-                .then(CryptoTickerWorker.validateExchanges)
-                .then(CryptoTickerWorker.saveExchanges)
+                .then(exchanges => this.validateExchanges(exchanges))
+                .then(exchanges => this.saveExchanges(exchanges))
                 .catch(err => console.log(`Unable to save exchanges for ${client.apiName}. ${err}`))
         }
     }
 
-    private static validateExchanges(exchangeRates: CryptoExchangeRate[]): CryptoExchangeRate[]{
+    private validateExchanges(exchangeRates: CryptoExchangeRate[]): CryptoExchangeRate[] {
         console.log("validating!");
         return exchangeRates.filter( er => er.valid());
     }
 
-    private static saveExchanges(validExchangeRates: CryptoExchangeRate[]){
+    private saveExchanges(validExchangeRates: CryptoExchangeRate[]){
         console.log("saving!");
-        validExchangeRates.forEach( er => ExchangeDao.create(er));
+        console.log(this);
+        validExchangeRates.forEach( er => this.dbClient.create(er));
     }
 }

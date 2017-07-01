@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CryptoTickerClient_1 = require("./CryptoTickerClient");
-const Currency_1 = require("../core/Currency");
-const CryptoExchangeRate_1 = require("../models/CryptoExchangeRate");
+const CryptoTickerClient_1 = require("../CryptoTickerClient");
+const Currency_1 = require("../../core/Currency");
+const CryptoExchangeRate_1 = require("../../models/CryptoExchangeRate");
 const util_1 = require("util");
-const TypeValidator_1 = require("../core/TypeValidator");
+const TypeValidator_1 = require("../../util/TypeValidator");
 class CoinCapTickerClient extends CryptoTickerClient_1.CryptoTickerClient {
     constructor(apiUrl, sourceCurrencies, targetCurrencies) {
         super(apiUrl, sourceCurrencies, targetCurrencies);

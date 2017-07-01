@@ -1,31 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const CryptoExchangeRate_1 = require("../models/CryptoExchangeRate");
 class CryptoTickerWorker {
-    constructor(clients) {
+    constructor(clients, dbClient) {
         this.run = () => {
             this.getAndSaveCurrentExchangeRates();
         };
         console.log("New ticker client!");
         this.clients = clients;
+        this.dbClient = dbClient;
     }
     getAndSaveCurrentExchangeRates() {
         console.log("beginning get and save pipeline!");
         for (let client of this.clients) {
             console.log(`Using ${client.apiName} to seek out exchanges.`);
             client.getCryptoExchange()
-                .then(CryptoTickerWorker.validateExchanges)
-                .then(CryptoTickerWorker.saveExchanges)
+                .then(exchanges => this.validateExchanges(exchanges))
+                .then(exchanges => this.saveExchanges(exchanges))
                 .catch(err => console.log(`Unable to save exchanges for ${client.apiName}. ${err}`));
         }
     }
-    static validateExchanges(exchangeRates) {
+    validateExchanges(exchangeRates) {
         console.log("validating!");
         return exchangeRates.filter(er => er.valid());
     }
-    static saveExchanges(validExchangeRates) {
+    saveExchanges(validExchangeRates) {
         console.log("saving!");
-        validExchangeRates.forEach(er => CryptoExchangeRate_1.ExchangeDao.create(er));
+        console.log(this);
+        validExchangeRates.forEach(er => this.dbClient.create(er));
     }
 }
 exports.CryptoTickerWorker = CryptoTickerWorker;

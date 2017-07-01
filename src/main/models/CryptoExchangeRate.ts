@@ -1,9 +1,6 @@
 import {Currency} from "../core/Currency";
-import {isNullOrUndefined} from "util";
 import { Document, Schema, Model, model} from "mongoose";
-import {Double} from "bson";
-import Doc = Mocha.reporters.Doc;
-import {TypeValidator} from "../core/TypeValidator";
+import {TypeValidator} from "../util/TypeValidator";
 
 export class CryptoExchangeRate {
     readonly date: Date;
@@ -28,14 +25,3 @@ export class CryptoExchangeRate {
                TypeValidator.validString(this.apiName)
     }
 }
-
-let CryptoExchangeRateSchema: Schema = new Schema({
-    date: Date,
-    source: String,
-    target: String,
-    rate: Number,
-    apiName: String
-}, {timestamps: true});
-
-type CryptoExchangeType = CryptoExchangeRate & Document
-export const ExchangeDao: Model<CryptoExchangeType> = model<CryptoExchangeType>("CryptoExchangeRate", CryptoExchangeRateSchema);

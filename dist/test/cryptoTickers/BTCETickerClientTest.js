@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const BTCETickerClient_1 = require("../../main/cryptoTickers/BTCETickerClient");
+const BTCETickerClient_1 = require("../../main/cryptoTickers/clients/BTCETickerClient");
 const TestConfig_1 = require("../TestConfig");
 const Currency_1 = require("../../main/core/Currency");
 const util_1 = require("util");

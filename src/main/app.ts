@@ -1,8 +1,10 @@
+import {MongoClient} from "./db/clients/MongoClient";
 const Runnr = require('node-runnr');
-import { CoinCapTickerClient } from "./cryptoTickers/CoinCapTickerClient";
-import { BTCETickerClient } from "./cryptoTickers/BTCETickerClient";
-import { PoloniexTickerClient } from "./cryptoTickers/PoloniexTickerClient";
+import { CoinCapTickerClient } from "./cryptoTickers/clients/CoinCapTickerClient";
+import { BTCETickerClient } from "./cryptoTickers/clients/BTCETickerClient";
+import { PoloniexTickerClient } from "./cryptoTickers/clients/PoloniexTickerClient";
 import { CryptoTickerWorker } from "./cryptoTickers/CryptoTickerWorker";
+
 var fetch = require('node-fetch');
 fetch.Promise = require('bluebird')
 
@@ -11,6 +13,7 @@ const path = require('path');
 import * as express from 'express';
 import router = require("./router");
 import { applicationConfig, ApplicationConfig } from "./config/ApplicationConfig";
+import {DBClient} from "./db/clients/DBClient";
 
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
@@ -49,40 +52,42 @@ app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index
 
 app.listen(port, function () {
     //init db
-    mongoose.connection.on('error', function(err) {
-        console.error('Mongoose default connection error: ' + err);
-        process.exit(1);
-    });
+    let mongoClient = new MongoClient();
+    mongoClient.initializeDb(port, db.mongo.url);
 
-    mongoose.connection.on('open', function(err) {
-        if (err) {
-            console.error(err);
-            // log.error('Mongoose default connection error: ' + err);
-            process.exit(1);
-        }
-
-        console.log(`ready to accept connections on port ${port}`);
-    });
-    mongoose.connect(db.mongo.url);
+    // mongoose.connection.on('error', function(err) {
+    //     console.error('Mongoose default connection error: ' + err);
+    //     process.exit(1);
+    // });
+    //
+    // mongoose.connection.on('open', function(err) {
+    //     if (err) {
+    //         console.error(err);
+    //         // log.error('Mongoose default connection error: ' + err);
+    //         process.exit(1);
+    //     }
+    //
+    //     console.log(`ready to accept connections on port ${port}`);
+    // });
+    // mongoose.connect(db.mongo.url);
 
     if(applicationConfig.cryptoTickerJob.shouldRun){
         console.log("NEW LOGGING");
-        let cryptoTickerWorker = configureTickerWorker(applicationConfig);
+        let cryptoTickerWorker = configureTickerWorker(applicationConfig, mongoClient);
         let runner = new Runnr();
         runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
         runner.begin();
     }
 });
 
-
-function configureTickerWorker(applicationConfig: ApplicationConfig): CryptoTickerWorker {
+function configureTickerWorker(applicationConfig: ApplicationConfig, mongoClient: DBClient): CryptoTickerWorker {
     let {poloniex, btcE, coinCap, sourceCoins, targetCoins} = applicationConfig;
 
     let poloniexClient: PoloniexTickerClient = new PoloniexTickerClient(poloniex.baseUrl, sourceCoins, targetCoins);
     let btceClient: BTCETickerClient = new BTCETickerClient(btcE.baseUrl, sourceCoins, targetCoins);
     let coinCapClient: CoinCapTickerClient = new CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
 
-    return new CryptoTickerWorker([poloniexClient, btceClient, coinCapClient]); //, btceClient, coinCapClient
+    return new CryptoTickerWorker([poloniexClient, btceClient, coinCapClient], mongoClient); //, btceClient, coinCapClient
 }
 
 console.log(`Listening at http://localhost:${port}`);

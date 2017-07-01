@@ -1,19 +1,19 @@
 import {Currency} from "../core/Currency";
 
 export class ApplicationConfig {
-    sourceCoins: Currency[] = [ Currency.BTC ]
-    targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ]
+    sourceCoins: Currency[] = [ Currency.BTC ];
+    targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ];
 
     poloniex = {
-        baseUrl: "https://poloniex.com/public?command=returnTicker" //filter
+        baseUrl: "https://poloniex.com/public?command=returnTicker"
     };
 
     btcE = {
-        baseUrl: "https://btc-e.com/api/3/ticker/eth_btc-ltc_btc-dsh_btc" //append
+        baseUrl: "https://btc-e.com/api/3/ticker"
     };
 
     coinCap = {
-        baseUrl: "http://www.coincap.io/front" //filter
+        baseUrl: "http://www.coincap.io/front"
     };
 
     cryptoTickerJob = {

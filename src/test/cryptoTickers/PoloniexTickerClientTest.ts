@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { CoinCapTickerClient } from "../../main/cryptoTickers/CoinCapTickerClient";
-import {PoloniexTickerClient} from "../../main/cryptoTickers/PoloniexTickerClient";
+import { CoinCapTickerClient } from "../../main/cryptoTickers/clients/CoinCapTickerClient";
+import {PoloniexTickerClient} from "../../main/cryptoTickers/clients/PoloniexTickerClient";
 import { testConfig } from "../TestConfig"
 import {Currency} from "../../main/core/Currency";
 import {isNullOrUndefined} from "util";

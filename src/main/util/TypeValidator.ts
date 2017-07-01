@@ -1,4 +1,4 @@
-import {Currency} from "./Currency";
+import {Currency} from "../core/Currency";
 import {isNullOrUndefined} from "util";
 
 export class TypeValidator {
@@ -14,7 +14,7 @@ export class TypeValidator {
 
     public static validNumber(number: number): boolean {
         if(isNullOrUndefined(number)){ return false; }
-        if(isNaN(number)){ return false;}
+        if(isNaN(number)){ return false; }
         return typeof number == 'number';
     }
 

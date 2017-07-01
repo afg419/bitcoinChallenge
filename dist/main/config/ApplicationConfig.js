@@ -6,13 +6,13 @@ class ApplicationConfig {
         this.sourceCoins = [Currency_1.Currency.BTC];
         this.targetCoins = [Currency_1.Currency.ETH, Currency_1.Currency.DSH, Currency_1.Currency.LTC];
         this.poloniex = {
-            baseUrl: "https://poloniex.com/public?command=returnTicker" //filter
+            baseUrl: "https://poloniex.com/public?command=returnTicker"
         };
         this.btcE = {
-            baseUrl: "https://btc-e.com/api/3/ticker/eth_btc-ltc_btc-dsh_btc" //append
+            baseUrl: "https://btc-e.com/api/3/ticker"
         };
         this.coinCap = {
-            baseUrl: "http://www.coincap.io/front" //filter
+            baseUrl: "http://www.coincap.io/front"
         };
         this.cryptoTickerJob = {
             shouldRun: true,

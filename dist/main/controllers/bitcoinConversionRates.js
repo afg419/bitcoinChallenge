@@ -1,4 +1,3 @@
-const bitcoinConversionRate = require('../models/bitcoinConversionRate');
 // const fetch = require('node-fetch')
 function createBitcoinConversionRate(req, res, next) {
     fetch('https://btc-e.com/api/3/ticker/btc_usd-btc_rur')
@@ -7,7 +6,7 @@ function createBitcoinConversionRate(req, res, next) {
         return res.text();
     }).then(function (body) {
         console.log(body);
-        bitcoinConversionRate.create({ sourceName: "test source name" });
+        // bitcoinConversionRate.create( { sourceName: "test source name" } )
     });
 }
 module.exports = {

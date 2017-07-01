@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = require("mongoose");
-const TypeValidator_1 = require("../core/TypeValidator");
+const TypeValidator_1 = require("../util/TypeValidator");
 class CryptoExchangeRate {
     constructor(date, source, target, rate, apiName) {
         this.date = date;
@@ -19,12 +18,4 @@ class CryptoExchangeRate {
     }
 }
 exports.CryptoExchangeRate = CryptoExchangeRate;
-let CryptoExchangeRateSchema = new mongoose_1.Schema({
-    date: Date,
-    source: String,
-    target: String,
-    rate: Number,
-    apiName: String
-}, { timestamps: true });
-exports.ExchangeDao = mongoose_1.model("CryptoExchangeRate", CryptoExchangeRateSchema);
 //# sourceMappingURL=CryptoExchangeRate.js.map

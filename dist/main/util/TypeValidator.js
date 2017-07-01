@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Currency_1 = require("./Currency");
+const Currency_1 = require("../core/Currency");
 const util_1 = require("util");
 class TypeValidator {
     static validDate(date) {

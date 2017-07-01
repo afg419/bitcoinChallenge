@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { CoinCapTickerClient } from "../../main/cryptoTickers/CoinCapTickerClient";
+import { CoinCapTickerClient } from "../../main/cryptoTickers/clients/CoinCapTickerClient";
 import { testConfig } from "../TestConfig"
 var fetch = require('node-fetch');
 

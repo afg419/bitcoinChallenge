@@ -10,10 +10,8 @@ class CryptoTickerClient {
     getCryptoExchange() {
         console.log(this.appendPathToUrl());
         return fetch(this.appendPathToUrl())
-            .then(res => {
-            return res.json();
-        })
-            .then(this.normalizeResponse.bind(this, new Date()))
+            .then(res => res.json())
+            .then(json => this.normalizeResponse(new Date(), json))
             .catch(err => {
             console.error(`Unable to acquire exchanges for ${this.apiName}. ${err}`);
             throw err;
