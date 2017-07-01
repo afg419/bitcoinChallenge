@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {BTCETickerClient} from "../../main/cryptoTickers/clients/BTCETickerClient";
 import { testConfig } from "../TestConfig"
-import {Currency} from "../../main/core/Currency";
+import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
 var fetch = require('node-fetch');
 

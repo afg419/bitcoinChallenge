@@ -1,4 +1,4 @@
-import {Currency} from "../core/Currency";
+import {Currency} from "../../../api/Currency";
 
 export class ServerConfig {
     sourceCoins: Currency[] = [ Currency.BTC ];

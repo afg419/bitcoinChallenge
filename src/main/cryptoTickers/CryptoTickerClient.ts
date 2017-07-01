@@ -1,4 +1,4 @@
-import {Currency} from "../core/Currency";
+import {Currency} from "../../../api/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 var fetch = require('node-fetch');
 

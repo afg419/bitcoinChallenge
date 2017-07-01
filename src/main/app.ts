@@ -60,7 +60,7 @@ let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController
 
 
 app.use('/', appRouter.expressRouter);
-app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index.html')) });
+app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '../../index.html')) });
 
 
 app.listen(port, function () {

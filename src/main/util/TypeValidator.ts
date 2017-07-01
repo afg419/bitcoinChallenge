@@ -1,4 +1,4 @@
-import {Currency} from "../core/Currency";
+import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
 
 export class TypeValidator {

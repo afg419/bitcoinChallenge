@@ -1,4 +1,4 @@
-import {Currency} from "../../core/Currency";
+import {Currency} from "../../../../api/Currency";
 import { CryptoTickerClient } from "../CryptoTickerClient";
 import { CryptoExchangeRate } from "../../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";

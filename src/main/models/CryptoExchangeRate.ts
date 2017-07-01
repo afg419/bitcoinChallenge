@@ -1,4 +1,4 @@
-import {Currency} from "../core/Currency";
+import {Currency} from "../../../api/Currency";
 import { Document, Schema, Model, model} from "mongoose";
 import {TypeValidator} from "../util/TypeValidator";
 
