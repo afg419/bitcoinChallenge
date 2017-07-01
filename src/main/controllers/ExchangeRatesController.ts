@@ -12,8 +12,6 @@ export class ExchangeRatesController {
     }
 
     indexExchangeRates(req: Request, res: Response, next: NextFunction) {
-        // console.log(req)
-        // console.log(req.query);
         let requestedMinutesBack: number = parseFloat(req.query.minutesBack);
         if(!TypeValidator.validNumber(requestedMinutesBack)){
             requestedMinutesBack = this.defaultMinutesBack;

@@ -5,6 +5,8 @@ import { BTCETickerClient } from "./cryptoTickers/clients/BTCETickerClient";
 import { PoloniexTickerClient } from "./cryptoTickers/clients/PoloniexTickerClient";
 import { CryptoTickerWorker } from "./cryptoTickers/CryptoTickerWorker";
 
+let apiConfig = require("../../api/apiConfig")
+
 var fetch = require('node-fetch');
 fetch.Promise = require('bluebird')
 const path = require('path');
@@ -44,20 +46,17 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '/../index.html'))
+    console.log(__dirname)
+    res.sendFile(path.join(__dirname, '../../index.html'))
 });
 
-console.log("about to make mongo client");
 let mongoClient = new MongoDBClient();
 
-console.log("about to make controller");
 let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
     applicationConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
 );
-console.log("Made Controller" + exchangeRatesController);
-console.log("about to make router")
-console.log(applicationConfig)
-let appRouter = new ApplicationRouter(router, applicationConfig.paths, exchangeRatesController);
+
+let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController);
 
 
 
