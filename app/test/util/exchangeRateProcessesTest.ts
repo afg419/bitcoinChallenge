@@ -23,29 +23,90 @@ describe('Exchange rate processes', () => {
 
     it('should filter by date', () => {
         let exchangeRates: ICrpytoExchangeRate[] = [];
-        exchangeRates[0] = makeCryptoExchangeRate(now, poloniex);
-        exchangeRates[1] = makeCryptoExchangeRate(then, poloniex);
-        exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex);
-        exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex);
-        let response = ExchangeRateProcess.getExchangeRateHistory(earlier, now, exchangeRates)
-        expect(response[poloniex].sort()).to.eql([exchangeRates[0], exchangeRates[1], exchangeRates[2]])
+        exchangeRates[0] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
+        exchangeRates[1] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
+        exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
+        exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
+        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates)
+        expect(response[poloniex][Currency.ETH]).to.eql([exchangeRates[0], exchangeRates[1], exchangeRates[2]])
     });
 
-    it('should sort by date', () => {
+    it('should sort by date descending', () => {
         let exchangeRates: ICrpytoExchangeRate[] = [];
-        exchangeRates[1] = makeCryptoExchangeRate(now, poloniex);
-        exchangeRates[0] = makeCryptoExchangeRate(then, poloniex);
-        exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex);
-        exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex);
-        let response = ExchangeRateProcess.getExchangeRateHistory(earlier, now, exchangeRates)
-        expect(response[poloniex].sort()).to.eql([exchangeRates[1], exchangeRates[0], exchangeRates[2]])
+        exchangeRates[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
+        exchangeRates[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
+        exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
+        exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
+        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates)
+        expect(response[poloniex][Currency.ETH]).to.eql([exchangeRates[1], exchangeRates[0], exchangeRates[2]])
     });
 
-    let makeCryptoExchangeRate = function(date: Date, apiName: string): ICrpytoExchangeRate {
+    it('should do so for multiple apis', () => {
+        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        poloniexCryptos[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
+        poloniexCryptos[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
+        poloniexCryptos[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
+        poloniexCryptos[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
+
+        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+        coinCapCryptos[2] = makeCryptoExchangeRate(now, coinCap, Currency.ETH);
+        coinCapCryptos[1] = makeCryptoExchangeRate(then, coinCap, Currency.ETH);
+        coinCapCryptos[0] = makeCryptoExchangeRate(earlier, coinCap, Currency.ETH);
+        coinCapCryptos[3] = makeCryptoExchangeRate(evenEarlier, coinCap, Currency.ETH);
+
+        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        expect(response[poloniex][Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0], poloniexCryptos[2]])
+        expect(response[coinCap][Currency.ETH]).to.eql([coinCapCryptos[2], coinCapCryptos[1], coinCapCryptos[0]])
+    });
+
+    it('should do so for multiple target coins', () => {
+        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        poloniexCryptos[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
+        poloniexCryptos[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
+        poloniexCryptos[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.DSH);
+        poloniexCryptos[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.DSH);
+        poloniexCryptos[4] = makeCryptoExchangeRate(then, poloniex, Currency.DSH);
+
+        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos);
+        expect(response[poloniex][Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0]]);
+        expect(response[poloniex][Currency.DSH]).to.eql([poloniexCryptos[4], poloniexCryptos[2]])
+    });
+
+    it('should extract most recent crypto in timerange', () => {
+        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+
+        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
+        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
+
+        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency.DSH, 0.4); //This guy vs
+        coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency.DSH, 0.56); //this guy
+
+        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
+        coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency.DSH, 1);
+
+        let history = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        let ethResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
+        let dshResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
+        expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
+        expect(dshResponse).to.eql([coinCapCryptos[2], poloniexCryptos[2]]);
+    });
+
+    let makeCryptoExchangeRate = function(date: Date, apiName: string, target: Currency): ICrpytoExchangeRate {
         return {
             source: Currency.BTC,
-            target: Currency.ETH,
+            target: target,
             rate: 0.11,
+            apiName: apiName,
+            date: date
+        }
+    }
+
+    let makeCryptoExchangeRateForRank = function(date: Date, apiName: string, target: Currency, rate: number): ICrpytoExchangeRate {
+        return {
+            source: Currency.BTC,
+            target: target,
+            rate: rate,
             apiName: apiName,
             date: date
         }
