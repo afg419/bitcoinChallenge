@@ -6,10 +6,6 @@ export class ApplicationConfig {
 
     defaultMinutesBackForExchangeRateQuery = 60;
 
-    paths = {
-        indexExchangeRatesPath: "/indexExchangeRates"
-    };
-
     poloniex = {
         baseUrl: "https://poloniex.com/public?command=returnTicker"
     };
@@ -25,7 +21,7 @@ export class ApplicationConfig {
     cryptoTickerJob = {
         shouldRun: true,
         jobName: "get-crypto-ticker-dev",
-        runEvery: '10' //seconds
+        runEvery: '60' //seconds
     };
 }
 

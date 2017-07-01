@@ -20,7 +20,7 @@ import {ApplicationRouter} from "./ApplicationRouter";
 
 const cors = require('express-cors');
 const bodyParser = require('body-parser')
-const port = (process.env.PORT || 3000);
+const port = apiConfig.port //(process.env.PORT || 3000);
 const app = express();
 // import  from './router';
 const db = require('./db/index');
@@ -57,8 +57,6 @@ let exchangeRatesController: ExchangeRatesController = new ExchangeRatesControll
 );
 
 let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController);
-
-
 
 
 app.use('/', appRouter.expressRouter);
