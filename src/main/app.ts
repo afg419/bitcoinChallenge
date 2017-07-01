@@ -12,7 +12,7 @@ fetch.Promise = require('bluebird')
 const path = require('path');
 import * as express from 'express';
 let router: Router = express.Router();
-import { applicationConfig, ApplicationConfig } from "./config/ApplicationConfig";
+import { serverConfig, ServerConfig } from "./config/ServerConfig";
 import {DBClient} from "./db/clients/DBClient";
 import {ExchangeRatesController} from "./controllers/ExchangeRatesController";
 import {Router} from "express";
@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
 let mongoClient = new MongoDBClient();
 
 let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
-    applicationConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
+    serverConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
 );
 
 let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController);
@@ -66,16 +66,16 @@ app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '/../index
 app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);
 
-    if(applicationConfig.cryptoTickerJob.shouldRun){
+    if(serverConfig.cryptoTickerJob.shouldRun){
         console.log("NEW LOGGING");
-        let cryptoTickerWorker = configureTickerWorker(applicationConfig, mongoClient);
+        let cryptoTickerWorker = configureTickerWorker(serverConfig, mongoClient);
         let runner = new Runnr();
-        runner.interval(applicationConfig.cryptoTickerJob.jobName, applicationConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
+        runner.interval(serverConfig.cryptoTickerJob.jobName, serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
         runner.begin();
     }
 });
 
-function configureTickerWorker(applicationConfig: ApplicationConfig, mongoClient: DBClient): CryptoTickerWorker {
+function configureTickerWorker(applicationConfig: ServerConfig, mongoClient: DBClient): CryptoTickerWorker {
     let {poloniex, btcE, coinCap, sourceCoins, targetCoins} = applicationConfig;
 
     let poloniexClient: PoloniexTickerClient = new PoloniexTickerClient(poloniex.baseUrl, sourceCoins, targetCoins);

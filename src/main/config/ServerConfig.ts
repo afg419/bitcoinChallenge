@@ -1,6 +1,6 @@
 import {Currency} from "../core/Currency";
 
-export class ApplicationConfig {
+export class ServerConfig {
     sourceCoins: Currency[] = [ Currency.BTC ];
     targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ];
 
@@ -25,7 +25,7 @@ export class ApplicationConfig {
     };
 }
 
-export let applicationConfig = new ApplicationConfig();
+export let serverConfig = new ServerConfig();
 
 
 

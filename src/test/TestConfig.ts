@@ -1,3 +1,3 @@
-import {ApplicationConfig} from "../main/config/ApplicationConfig";
+import {ServerConfig} from "../main/config/ServerConfig";
 
-export let testConfig = new ApplicationConfig();
+export let testConfig = new ServerConfig();

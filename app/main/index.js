@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import Graph from './components/graph/Graph'
-let apiConfig = require('../api/apiConfig')
+let apiConfig = require('../../api/apiConfig')
 
 class Root extends Component {
   constructor(){
