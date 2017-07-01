@@ -50,10 +50,10 @@ app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '../../ind
 app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);
     if (ServerConfig_1.serverConfig.cryptoTickerJob.shouldRun) {
-        console.log("NEW LOGGING");
         let cryptoTickerWorker = configureTickerWorker(ServerConfig_1.serverConfig, mongoClient);
         let runner = new Runnr();
         runner.interval(ServerConfig_1.serverConfig.cryptoTickerJob.jobName, ServerConfig_1.serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
+        // runner.interval(serverConfig.deleteOldTickerJob.jobName, serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
         runner.begin();
     }
 });

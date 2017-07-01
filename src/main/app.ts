@@ -67,10 +67,12 @@ app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);
 
     if(serverConfig.cryptoTickerJob.shouldRun){
-        console.log("NEW LOGGING");
         let cryptoTickerWorker = configureTickerWorker(serverConfig, mongoClient);
+
         let runner = new Runnr();
         runner.interval(serverConfig.cryptoTickerJob.jobName, serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
+        // runner.interval(serverConfig.deleteOldTickerJob.jobName, serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
+
         runner.begin();
     }
 });
