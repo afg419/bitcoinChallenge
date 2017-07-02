@@ -1,6 +1,6 @@
 import {ICrpytoExchangeRate} from "../../../api/ICrpytoExchangeRate";
 import {Currency} from "../../../api/Currency";
-import {ExchangeRateProcess} from "../../main/util/exchangeRateProcesses";
+import {ExchangeRateProcesses} from "../../main/util/ExchangeRateProcesses";
 import { expect } from 'chai';
 
 
@@ -27,7 +27,7 @@ describe('Exchange rate processes', () => {
         exchangeRates[1] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
         exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
-        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates)
+        let response = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, exchangeRates)
         expect(response[poloniex][Currency.ETH]).to.eql([exchangeRates[0], exchangeRates[1], exchangeRates[2]])
     });
 
@@ -37,7 +37,7 @@ describe('Exchange rate processes', () => {
         exchangeRates[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
         exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
-        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates)
+        let response = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, exchangeRates)
         expect(response[poloniex][Currency.ETH]).to.eql([exchangeRates[1], exchangeRates[0], exchangeRates[2]])
     });
 
@@ -54,7 +54,7 @@ describe('Exchange rate processes', () => {
         coinCapCryptos[0] = makeCryptoExchangeRate(earlier, coinCap, Currency.ETH);
         coinCapCryptos[3] = makeCryptoExchangeRate(evenEarlier, coinCap, Currency.ETH);
 
-        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        let response = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
         expect(response[poloniex][Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0], poloniexCryptos[2]])
         expect(response[coinCap][Currency.ETH]).to.eql([coinCapCryptos[2], coinCapCryptos[1], coinCapCryptos[0]])
     });
@@ -67,7 +67,7 @@ describe('Exchange rate processes', () => {
         poloniexCryptos[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.DSH);
         poloniexCryptos[4] = makeCryptoExchangeRate(then, poloniex, Currency.DSH);
 
-        let response = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos);
+        let response = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos);
         expect(response[poloniex][Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0]]);
         expect(response[poloniex][Currency.DSH]).to.eql([poloniexCryptos[4], poloniexCryptos[2]])
     });
@@ -85,9 +85,9 @@ describe('Exchange rate processes', () => {
         poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
         coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency.DSH, 1);
 
-        let history = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
-        let ethResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
-        let dshResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
+        let history = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        let ethResponse = ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
+        let dshResponse = ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
         expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
         expect(dshResponse).to.eql([coinCapCryptos[2], poloniexCryptos[2]]);
     });
@@ -103,9 +103,9 @@ describe('Exchange rate processes', () => {
         poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency.DSH, 0.4); //This guy
         poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
 
-        let history = ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
-        let ethResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
-        let dshResponse = ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
+        let history = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+        let ethResponse = ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.ETH);
+        let dshResponse = ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency.DSH);
         expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
         expect(dshResponse).to.eql([poloniexCryptos[2]]);
     });

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const CoinCapTickerClient_1 = require("../../main/cryptoTickers/clients/CoinCapTickerClient");
+const CoinCapTickerClient_1 = require("../../main/cryptoTickers/CoinCapTickerClient");
 const TestConfig_1 = require("../TestConfig");
 var fetch = require('node-fetch');
 describe('Gets and Normalizes CryptoExchanges', () => {

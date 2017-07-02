@@ -1,5 +1,5 @@
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
-import { CryptoTickerClient } from "./CryptoTickerClient";
+import { CryptoTickerClient } from "../cryptoTickers/CryptoTickerClient";
 import {DBClient} from "../db/clients/DBClient";
 
 export class CryptoTickerWorker implements JobWorker {

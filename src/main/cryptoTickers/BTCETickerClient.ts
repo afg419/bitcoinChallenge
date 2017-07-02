@@ -1,8 +1,8 @@
-import {CryptoTickerClient} from "../CryptoTickerClient";
-import {Currency} from "../../../../api/Currency";
-import {CryptoExchangeRate} from "../../models/CryptoExchangeRate";
+import {CryptoTickerClient} from "./CryptoTickerClient";
+import {Currency} from "../../../api/Currency";
+import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
-import {TypeValidator} from "../../util/TypeValidator";
+import {TypeValidator} from "../util/TypeValidator";
 
 export class BTCETickerClient extends CryptoTickerClient {
     readonly apiName: string = "BTC-e";

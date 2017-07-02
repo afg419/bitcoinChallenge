@@ -2,10 +2,10 @@
 exports.__esModule = true;
 var util_1 = require("util");
 var _ = require('lodash');
-var ExchangeRateProcess = (function () {
-    function ExchangeRateProcess() {
+var ExchangeRateProcesses = (function () {
+    function ExchangeRateProcesses() {
     }
-    ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance = function (exchangeHistory, target) {
+    ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance = function (exchangeHistory, target) {
         var toReturn = [];
         for (var apiName in exchangeHistory) {
             try {
@@ -23,7 +23,7 @@ var ExchangeRateProcess = (function () {
         }
         return toReturn.filter(Boolean).sort(function (rate1, rate2) { return rate2.rate - rate1.rate; });
     };
-    ExchangeRateProcess.formatExchangeRateHistory = function (startDate, endDate, exchangeRates) {
+    ExchangeRateProcesses.formatExchangeRateHistory = function (startDate, endDate, exchangeRates) {
         //filters out out of date exchanges, and sorts them by date descending
         var ratesInRange = exchangeRates
             .filter(function (exchangeRate) { return (startDate <= exchangeRate.date && exchangeRate.date <= endDate); }).sort(function (rate1, rate2) {
@@ -37,6 +37,6 @@ var ExchangeRateProcess = (function () {
         }
         return toReturn;
     };
-    return ExchangeRateProcess;
+    return ExchangeRateProcesses;
 }());
-exports.ExchangeRateProcess = ExchangeRateProcess;
+exports.ExchangeRateProcesses = ExchangeRateProcesses;

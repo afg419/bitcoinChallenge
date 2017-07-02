@@ -4,7 +4,7 @@ import {isNullOrUndefined} from "util";
 import {start} from "repl";
 var _ = require('lodash');
 
-export class ExchangeRateProcess {
+export class ExchangeRateProcesses {
     static getApisForTargetCurrencyInOrderOfPerformance( exchangeHistory: { [key:string]: { [key:string]: ICrpytoExchangeRate[]}; }, target: Currency ): ICrpytoExchangeRate[] {
         let toReturn: ICrpytoExchangeRate[] = [];
         for( let apiName in exchangeHistory ){

@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var Currency_1 = require("../../../api/Currency");
-var exchangeRateProcesses_1 = require("../../main/util/exchangeRateProcesses");
+var ExchangeRateProcesses_1 = require("../../main/util/ExchangeRateProcesses");
 var chai_1 = require("chai");
 describe('Exchange rate processes', function () {
     var poloniex = "poloniex";
@@ -20,7 +20,7 @@ describe('Exchange rate processes', function () {
         exchangeRates[1] = makeCryptoExchangeRate(then, poloniex, Currency_1.Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency_1.Currency.ETH);
         exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency_1.Currency.ETH);
-        var response = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates);
+        var response = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, exchangeRates);
         chai_1.expect(response[poloniex][Currency_1.Currency.ETH]).to.eql([exchangeRates[0], exchangeRates[1], exchangeRates[2]]);
     });
     it('should sort by date descending', function () {
@@ -29,7 +29,7 @@ describe('Exchange rate processes', function () {
         exchangeRates[0] = makeCryptoExchangeRate(then, poloniex, Currency_1.Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency_1.Currency.ETH);
         exchangeRates[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency_1.Currency.ETH);
-        var response = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, exchangeRates);
+        var response = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, exchangeRates);
         chai_1.expect(response[poloniex][Currency_1.Currency.ETH]).to.eql([exchangeRates[1], exchangeRates[0], exchangeRates[2]]);
     });
     it('should do so for multiple apis', function () {
@@ -43,7 +43,7 @@ describe('Exchange rate processes', function () {
         coinCapCryptos[1] = makeCryptoExchangeRate(then, coinCap, Currency_1.Currency.ETH);
         coinCapCryptos[0] = makeCryptoExchangeRate(earlier, coinCap, Currency_1.Currency.ETH);
         coinCapCryptos[3] = makeCryptoExchangeRate(evenEarlier, coinCap, Currency_1.Currency.ETH);
-        var response = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
+        var response = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
         chai_1.expect(response[poloniex][Currency_1.Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0], poloniexCryptos[2]]);
         chai_1.expect(response[coinCap][Currency_1.Currency.ETH]).to.eql([coinCapCryptos[2], coinCapCryptos[1], coinCapCryptos[0]]);
     });
@@ -54,7 +54,7 @@ describe('Exchange rate processes', function () {
         poloniexCryptos[2] = makeCryptoExchangeRate(earlier, poloniex, Currency_1.Currency.DSH);
         poloniexCryptos[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency_1.Currency.DSH);
         poloniexCryptos[4] = makeCryptoExchangeRate(then, poloniex, Currency_1.Currency.DSH);
-        var response = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos);
+        var response = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos);
         chai_1.expect(response[poloniex][Currency_1.Currency.ETH]).to.eql([poloniexCryptos[1], poloniexCryptos[0]]);
         chai_1.expect(response[poloniex][Currency_1.Currency.DSH]).to.eql([poloniexCryptos[4], poloniexCryptos[2]]);
     });
@@ -67,9 +67,9 @@ describe('Exchange rate processes', function () {
         coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency_1.Currency.DSH, 0.56); //this guy
         poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency_1.Currency.ETH, 1);
         coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency_1.Currency.DSH, 1);
-        var history = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
-        var ethResponse = exchangeRateProcesses_1.ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.ETH);
-        var dshResponse = exchangeRateProcesses_1.ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.DSH);
+        var history = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
+        var ethResponse = ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.ETH);
+        var dshResponse = ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.DSH);
         chai_1.expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
         chai_1.expect(dshResponse).to.eql([coinCapCryptos[2], poloniexCryptos[2]]);
     });
@@ -81,9 +81,9 @@ describe('Exchange rate processes', function () {
         coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency_1.Currency.ETH, 0.10); //this guy
         poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency_1.Currency.DSH, 0.4); //This guy
         poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency_1.Currency.ETH, 1);
-        var history = exchangeRateProcesses_1.ExchangeRateProcess.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
-        var ethResponse = exchangeRateProcesses_1.ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.ETH);
-        var dshResponse = exchangeRateProcesses_1.ExchangeRateProcess.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.DSH);
+        var history = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
+        var ethResponse = ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.ETH);
+        var dshResponse = ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(history, Currency_1.Currency.DSH);
         chai_1.expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
         chai_1.expect(dshResponse).to.eql([poloniexCryptos[2]]);
     });

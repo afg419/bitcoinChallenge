@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {BTCETickerClient} from "../../main/cryptoTickers/clients/BTCETickerClient";
+import {BTCETickerClient} from "../../main/cryptoTickers/BTCETickerClient";
 import { testConfig } from "../TestConfig"
 import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";

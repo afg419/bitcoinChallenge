@@ -1,21 +1,23 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Currency_1 = require("../../../api/Currency");
-const util_1 = require("util");
-class TypeValidator {
-    static validDate(date) {
+exports.__esModule = true;
+var Currency_1 = require("../../../api/Currency");
+var util_1 = require("util");
+var TypeValidator = (function () {
+    function TypeValidator() {
+    }
+    TypeValidator.validDate = function (date) {
         if (util_1.isNullOrUndefined(date)) {
             return false;
         }
         return date instanceof Date;
-    }
-    static validCurrency(currency) {
+    };
+    TypeValidator.validCurrency = function (currency) {
         if (util_1.isNullOrUndefined(currency)) {
             return false;
         }
         return !util_1.isNullOrUndefined(Currency_1.Currency[currency]);
-    }
-    static validNumber(number) {
+    };
+    TypeValidator.validNumber = function (number) {
         if (util_1.isNullOrUndefined(number)) {
             return false;
         }
@@ -23,13 +25,13 @@ class TypeValidator {
             return false;
         }
         return typeof number == 'number';
-    }
-    static validString(string) {
+    };
+    TypeValidator.validString = function (string) {
         if (util_1.isNullOrUndefined(string)) {
             return false;
         }
         return typeof string == 'string';
-    }
-}
+    };
+    return TypeValidator;
+}());
 exports.TypeValidator = TypeValidator;
-//# sourceMappingURL=TypeValidator.js.map

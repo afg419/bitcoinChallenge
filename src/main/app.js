@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const MongoDBClient_1 = require("./db/clients/MongoDBClient");
 const Runnr = require('node-runnr');
-const CoinCapTickerClient_1 = require("./cryptoTickers/clients/CoinCapTickerClient");
-const BTCETickerClient_1 = require("./cryptoTickers/clients/BTCETickerClient");
-const PoloniexTickerClient_1 = require("./cryptoTickers/clients/PoloniexTickerClient");
-const CryptoTickerWorker_1 = require("./cryptoTickers/CryptoTickerWorker");
+const CoinCapTickerClient_1 = require("./cryptoTickers/CoinCapTickerClient");
+const BTCETickerClient_1 = require("./cryptoTickers/BTCETickerClient");
+const PoloniexTickerClient_1 = require("./cryptoTickers/PoloniexTickerClient");
+const CryptoTickerWorker_1 = require("./jobs/CryptoTickerWorker");
 let apiConfig = require("../../api/apiConfig");
 var fetch = require('node-fetch');
 fetch.Promise = require('bluebird');
@@ -15,7 +15,7 @@ let router = express.Router();
 const ServerConfig_1 = require("./config/ServerConfig");
 const ExchangeRatesController_1 = require("./controllers/ExchangeRatesController");
 const ApplicationRouter_1 = require("./ApplicationRouter");
-const DeleteTickerWorker_1 = require("./cryptoTickers/DeleteTickerWorker");
+const DeleteTickerWorker_1 = require("./jobs/DeleteTickerWorker");
 const cors = require('express-cors');
 const bodyParser = require('body-parser');
 const port = apiConfig.port; //(process.env.PORT || 3000);
@@ -50,12 +50,16 @@ app.use('/', appRouter.expressRouter);
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '../../index.html')); });
 app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);
+    let runner = new Runnr();
+    if (ServerConfig_1.serverConfig.deleteOldTickerJob.shouldRun) {
+        let deleteTickerWorker = configureDeleteTickerWorker(ServerConfig_1.serverConfig, mongoClient);
+        runner.interval(ServerConfig_1.serverConfig.deleteOldTickerJob.jobName, ServerConfig_1.serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
+    }
     if (ServerConfig_1.serverConfig.cryptoTickerJob.shouldRun) {
         let cryptoTickerWorker = configureTickerWorker(ServerConfig_1.serverConfig, mongoClient);
-        let deleteTickerWorker = configureDeleteTickerWorker(ServerConfig_1.serverConfig, mongoClient);
-        let runner = new Runnr();
         runner.interval(ServerConfig_1.serverConfig.cryptoTickerJob.jobName, ServerConfig_1.serverConfig.cryptoTickerJob.runEvery, {}).job(cryptoTickerWorker.run);
-        runner.interval(ServerConfig_1.serverConfig.deleteOldTickerJob.jobName, ServerConfig_1.serverConfig.deleteOldTickerJob.runEvery, {}).job(deleteTickerWorker.run);
+    }
+    if (ServerConfig_1.serverConfig.deleteOldTickerJob.shouldRun || ServerConfig_1.serverConfig.cryptoTickerJob.shouldRun) {
         runner.begin();
     }
 });
