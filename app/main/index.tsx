@@ -31,8 +31,6 @@ class Root extends Component {
     }, 1000)
   }
 
-
-
   render() {
     return (
       <div>"YO"</div>

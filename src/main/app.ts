@@ -1,4 +1,4 @@
-import { MongoDBClient } from "./db/clients/MongoClient";
+import { MongoDBClient } from "./db/clients/MongoDBClient";
 const Runnr = require('node-runnr');
 import { CoinCapTickerClient } from "./cryptoTickers/clients/CoinCapTickerClient";
 import { BTCETickerClient } from "./cryptoTickers/clients/BTCETickerClient";

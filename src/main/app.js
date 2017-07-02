@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const MongoClient_1 = require("./db/clients/MongoClient");
+const MongoDBClient_1 = require("./db/clients/MongoDBClient");
 const Runnr = require('node-runnr');
 const CoinCapTickerClient_1 = require("./cryptoTickers/clients/CoinCapTickerClient");
 const BTCETickerClient_1 = require("./cryptoTickers/clients/BTCETickerClient");
@@ -43,7 +43,7 @@ app.get('/', function (req, res) {
     console.log(__dirname);
     res.sendFile(path.join(__dirname, '../../index.html'));
 });
-let mongoClient = new MongoClient_1.MongoDBClient();
+let mongoClient = new MongoDBClient_1.MongoDBClient();
 let exchangeRatesController = new ExchangeRatesController_1.ExchangeRatesController(ServerConfig_1.serverConfig.defaultMinutesBackForExchangeRateQuery, mongoClient);
 let appRouter = new ApplicationRouter_1.ApplicationRouter(router, apiConfig, exchangeRatesController);
 app.use('/', appRouter.expressRouter);
