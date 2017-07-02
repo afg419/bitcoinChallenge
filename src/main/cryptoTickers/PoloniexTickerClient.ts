@@ -2,7 +2,7 @@ import {Currency} from "../../../api/Currency";
 import { CryptoTickerClient } from "./CryptoTickerClient";
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
-import {TypeValidator} from "../util/TypeValidator";
+import {TypeValidator} from "../../../api/TypeValidator";
 
 export class PoloniexTickerClient extends CryptoTickerClient {
     readonly apiName: string = "Poloniex";

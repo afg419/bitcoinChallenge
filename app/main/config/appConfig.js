@@ -1,9 +1,8 @@
-"use strict";
-exports.__esModule = true;
-var AppConfig = (function () {
-    function AppConfig() {
+module.exports = {
+    minutesBackForExchangeRateGraphs: 1440 * 3,
+    pollServerForExchangeRatesJob: {
+        shouldRun: true,
+        runEvery: 1 //seconds
     }
-    return AppConfig;
-}());
-exports.AppConfig = AppConfig;
-exports.appConfig = new AppConfig();
+};
+// export let appConfig = new AppConfig();

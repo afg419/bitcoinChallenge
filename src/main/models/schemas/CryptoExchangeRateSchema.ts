@@ -1,5 +1,5 @@
 import { Document, Schema, Model, model} from "mongoose";
-import {CryptoExchangeRate} from "../CryptoExchangeRate";
+import { CryptoExchangeRate } from "../CryptoExchangeRate";
 
 let CryptoExchangeRateSchema: Schema = new Schema({
     date: Date,

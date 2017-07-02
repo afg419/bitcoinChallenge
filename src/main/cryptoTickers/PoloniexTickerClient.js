@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Currency_1 = require("../../../api/Currency");
 const CryptoTickerClient_1 = require("./CryptoTickerClient");
 const CryptoExchangeRate_1 = require("../models/CryptoExchangeRate");
-const TypeValidator_1 = require("../util/TypeValidator");
+const TypeValidator_1 = require("../../../api/TypeValidator");
 class PoloniexTickerClient extends CryptoTickerClient_1.CryptoTickerClient {
     constructor(apiUrl, sourceCurrencies, targetCurrencies) {
         super(apiUrl, sourceCurrencies, targetCurrencies);

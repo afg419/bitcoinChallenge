@@ -1,23 +1,21 @@
 "use strict";
-exports.__esModule = true;
-var Currency_1 = require("../../../api/Currency");
-var util_1 = require("util");
-var TypeValidator = (function () {
-    function TypeValidator() {
-    }
-    TypeValidator.validDate = function (date) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = require("util");
+const Currency_1 = require("./Currency");
+class TypeValidator {
+    static validDate(date) {
         if (util_1.isNullOrUndefined(date)) {
             return false;
         }
         return date instanceof Date;
-    };
-    TypeValidator.validCurrency = function (currency) {
+    }
+    static validCurrency(currency) {
         if (util_1.isNullOrUndefined(currency)) {
             return false;
         }
         return !util_1.isNullOrUndefined(Currency_1.Currency[currency]);
-    };
-    TypeValidator.validNumber = function (number) {
+    }
+    static validNumber(number) {
         if (util_1.isNullOrUndefined(number)) {
             return false;
         }
@@ -25,13 +23,13 @@ var TypeValidator = (function () {
             return false;
         }
         return typeof number == 'number';
-    };
-    TypeValidator.validString = function (string) {
+    }
+    static validString(string) {
         if (util_1.isNullOrUndefined(string)) {
             return false;
         }
         return typeof string == 'string';
-    };
-    return TypeValidator;
-}());
+    }
+}
 exports.TypeValidator = TypeValidator;
+//# sourceMappingURL=TypeValidator.js.map

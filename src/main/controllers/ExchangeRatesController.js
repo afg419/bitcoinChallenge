@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const TypeValidator_1 = require("../util/TypeValidator");
+const TypeValidator_1 = require("../../../api/TypeValidator");
 class ExchangeRatesController {
     constructor(defaultMinutesBack, dbClient) {
         this.defaultMinutesBack = defaultMinutesBack;

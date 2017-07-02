@@ -2,7 +2,7 @@ import {CryptoTickerClient} from "./CryptoTickerClient";
 import {Currency} from "../../../api/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
-import {TypeValidator} from "../util/TypeValidator";
+import {TypeValidator} from "../../../api/TypeValidator";
 
 export class CoinCapTickerClient extends CryptoTickerClient {
     readonly apiName: string = "CoinCap";

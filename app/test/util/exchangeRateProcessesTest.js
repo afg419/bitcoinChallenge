@@ -3,6 +3,7 @@ exports.__esModule = true;
 var Currency_1 = require("../../../api/Currency");
 var ExchangeRateProcesses_1 = require("../../main/util/ExchangeRateProcesses");
 var chai_1 = require("chai");
+var CryptoExchangeRate_1 = require("../../main/models/CryptoExchangeRate");
 describe('Exchange rate processes', function () {
     var poloniex = "poloniex";
     var btcE = "btcE";
@@ -88,21 +89,9 @@ describe('Exchange rate processes', function () {
         chai_1.expect(dshResponse).to.eql([poloniexCryptos[2]]);
     });
     var makeCryptoExchangeRate = function (date, apiName, target) {
-        return {
-            source: Currency_1.Currency.BTC,
-            target: target,
-            rate: 0.11,
-            apiName: apiName,
-            date: date
-        };
+        return new CryptoExchangeRate_1.CryptoExchangeRate(date, Currency_1.Currency.BTC, target, 0.11, apiName);
     };
     var makeCryptoExchangeRateForRank = function (date, apiName, target, rate) {
-        return {
-            source: Currency_1.Currency.BTC,
-            target: target,
-            rate: rate,
-            apiName: apiName,
-            date: date
-        };
+        return new CryptoExchangeRate_1.CryptoExchangeRate(date, Currency_1.Currency.BTC, target, rate, apiName);
     };
 });

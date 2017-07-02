@@ -1,5 +1,5 @@
 import {Router, Request, Response, NextFunction} from 'express';
-import {TypeValidator} from "../util/TypeValidator";
+import {TypeValidator} from "../../../api/TypeValidator";
 import {DBClient} from "../db/clients/DBClient";
 
 export class ExchangeRatesController {

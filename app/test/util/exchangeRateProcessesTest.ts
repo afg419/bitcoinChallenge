@@ -1,7 +1,8 @@
-import {ICrpytoExchangeRate} from "../../../api/ICrpytoExchangeRate";
+import {ICryptoExchangeRate} from "../../../api/ICryptoExchangeRate";
 import {Currency} from "../../../api/Currency";
 import {ExchangeRateProcesses} from "../../main/util/ExchangeRateProcesses";
 import { expect } from 'chai';
+import {CryptoExchangeRate} from "../../main/models/CryptoExchangeRate";
 
 
 describe('Exchange rate processes', () => {
@@ -22,7 +23,7 @@ describe('Exchange rate processes', () => {
 
 
     it('should filter by date', () => {
-        let exchangeRates: ICrpytoExchangeRate[] = [];
+        let exchangeRates: ICryptoExchangeRate[] = [];
         exchangeRates[0] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
         exchangeRates[1] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
@@ -32,7 +33,7 @@ describe('Exchange rate processes', () => {
     });
 
     it('should sort by date descending', () => {
-        let exchangeRates: ICrpytoExchangeRate[] = [];
+        let exchangeRates: ICryptoExchangeRate[] = [];
         exchangeRates[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
         exchangeRates[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         exchangeRates[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
@@ -42,13 +43,13 @@ describe('Exchange rate processes', () => {
     });
 
     it('should do so for multiple apis', () => {
-        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        let poloniexCryptos: ICryptoExchangeRate[] = [];
         poloniexCryptos[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
         poloniexCryptos[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         poloniexCryptos[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.ETH);
         poloniexCryptos[3] = makeCryptoExchangeRate(evenEarlier, poloniex, Currency.ETH);
 
-        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+        let coinCapCryptos: ICryptoExchangeRate[] = [];
         coinCapCryptos[2] = makeCryptoExchangeRate(now, coinCap, Currency.ETH);
         coinCapCryptos[1] = makeCryptoExchangeRate(then, coinCap, Currency.ETH);
         coinCapCryptos[0] = makeCryptoExchangeRate(earlier, coinCap, Currency.ETH);
@@ -60,7 +61,7 @@ describe('Exchange rate processes', () => {
     });
 
     it('should do so for multiple target coins', () => {
-        let poloniexCryptos: ICrpytoExchangeRate[] = [];
+        let poloniexCryptos: ICryptoExchangeRate[] = [];
         poloniexCryptos[1] = makeCryptoExchangeRate(now, poloniex, Currency.ETH);
         poloniexCryptos[0] = makeCryptoExchangeRate(then, poloniex, Currency.ETH);
         poloniexCryptos[2] = makeCryptoExchangeRate(earlier, poloniex, Currency.DSH);
@@ -73,8 +74,8 @@ describe('Exchange rate processes', () => {
     });
 
     it('should extract most recent crypto in timerange', () => {
-        let poloniexCryptos: ICrpytoExchangeRate[] = [];
-        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+        let poloniexCryptos: ICryptoExchangeRate[] = [];
+        let coinCapCryptos: ICryptoExchangeRate[] = [];
 
         poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
         coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
@@ -94,8 +95,8 @@ describe('Exchange rate processes', () => {
 
     //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
     it('should ignore missing apis from history', () => {
-        let poloniexCryptos: ICrpytoExchangeRate[] = [];
-        let coinCapCryptos: ICrpytoExchangeRate[] = [];
+        let poloniexCryptos: ICryptoExchangeRate[] = [];
+        let coinCapCryptos: ICryptoExchangeRate[] = [];
 
         poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
         coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
@@ -110,23 +111,23 @@ describe('Exchange rate processes', () => {
         expect(dshResponse).to.eql([poloniexCryptos[2]]);
     });
 
-    let makeCryptoExchangeRate = function(date: Date, apiName: string, target: Currency): ICrpytoExchangeRate {
-        return {
-            source: Currency.BTC,
-            target: target,
-            rate: 0.11,
-            apiName: apiName,
-            date: date
-        }
+    let makeCryptoExchangeRate = function(date: Date, apiName: string, target: Currency): ICryptoExchangeRate {
+        return new CryptoExchangeRate(
+            date,
+            Currency.BTC,
+            target,
+            0.11,
+            apiName
+        )
     };
 
-    let makeCryptoExchangeRateForRank = function(date: Date, apiName: string, target: Currency, rate: number): ICrpytoExchangeRate {
-        return {
-            source: Currency.BTC,
-            target: target,
-            rate: rate,
-            apiName: apiName,
-            date: date
-        }
+    let makeCryptoExchangeRateForRank = function(date: Date, apiName: string, target: Currency, rate: number): ICryptoExchangeRate {
+        return new CryptoExchangeRate(
+            date,
+            Currency.BTC,
+            target,
+            rate,
+            apiName
+        )
     }
 });

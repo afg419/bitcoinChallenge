@@ -1,12 +1,12 @@
-import {ICrpytoExchangeRate} from "../../../api/ICrpytoExchangeRate";
+import {ICryptoExchangeRate} from "../../../api/ICryptoExchangeRate";
 import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
 import {start} from "repl";
 var _ = require('lodash');
 
 export class ExchangeRateProcesses {
-    static getApisForTargetCurrencyInOrderOfPerformance( exchangeHistory: { [key:string]: { [key:string]: ICrpytoExchangeRate[]}; }, target: Currency ): ICrpytoExchangeRate[] {
-        let toReturn: ICrpytoExchangeRate[] = [];
+    static getApisForTargetCurrencyInOrderOfPerformance(exchangeHistory: { [key:string]: { [key:string]: ICryptoExchangeRate[]}; }, target: Currency ): ICryptoExchangeRate[] {
+        let toReturn: ICryptoExchangeRate[] = [];
         for( let apiName in exchangeHistory ){
             try{
                 let exchangeOfInterest = exchangeHistory[apiName][target][0];
@@ -22,20 +22,20 @@ export class ExchangeRateProcesses {
         return toReturn.filter(Boolean).sort( (rate1, rate2) => rate2.rate - rate1.rate );
     }
 
-    static formatExchangeRateHistory(startDate: Date, endDate: Date, exchangeRates: ICrpytoExchangeRate[]): { [key:string]: { [key:string]: ICrpytoExchangeRate[]}; } {
+    static formatExchangeRateHistory(startDate: Date, endDate: Date, exchangeRates: ICryptoExchangeRate[]): { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } {
         //filters out out of date exchanges, and sorts them by date descending
+
         let ratesInRange = exchangeRates
             .filter(exchangeRate => (startDate <= exchangeRate.date && exchangeRate.date <= endDate)).sort( (rate1, rate2) => {
-                return (rate2.date as any) - (rate1.date as any)
+                return (new Date(rate2.date) as any) - (new Date(rate1.date) as any)
             });
-
         //groups remaining exchanges by api name and target currency... { apiName: { target: [ exchanges ] } }
-        let namesToRatings: { [key:string]: ICrpytoExchangeRate[]; }  = _.groupBy(ratesInRange, rate => rate.apiName);
-        let toReturn: { [key:string]: { [key:string]: ICrpytoExchangeRate[] } } = {};
+        let namesToRatings: { [key:string]: ICryptoExchangeRate[]; }  = _.groupBy(ratesInRange, rate => rate.apiName);
+        let toReturn: { [key:string]: { [key:string]: ICryptoExchangeRate[] } } = {};
         for (let key in namesToRatings) {
+            console.log(key)
             toReturn[key] = _.groupBy(namesToRatings[key], rate => rate.target);
         }
-
         return toReturn;
     }
 }

@@ -1,5 +1,5 @@
-import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
+import {Currency} from "./Currency";
 
 export class TypeValidator {
     public static validDate(date: Date): boolean {

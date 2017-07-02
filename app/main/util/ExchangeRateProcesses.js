@@ -27,12 +27,13 @@ var ExchangeRateProcesses = (function () {
         //filters out out of date exchanges, and sorts them by date descending
         var ratesInRange = exchangeRates
             .filter(function (exchangeRate) { return (startDate <= exchangeRate.date && exchangeRate.date <= endDate); }).sort(function (rate1, rate2) {
-            return rate2.date - rate1.date;
+            return new Date(rate2.date) - new Date(rate1.date);
         });
         //groups remaining exchanges by api name and target currency... { apiName: { target: [ exchanges ] } }
         var namesToRatings = _.groupBy(ratesInRange, function (rate) { return rate.apiName; });
         var toReturn = {};
         for (var key in namesToRatings) {
+            console.log(key);
             toReturn[key] = _.groupBy(namesToRatings[key], function (rate) { return rate.target; });
         }
         return toReturn;

@@ -1,15 +1,13 @@
-
-
-export class AppConfig {
-    minutesBackForExchangeRateGraphs: 60
+module.exports = {
+    minutesBackForExchangeRateGraphs: 1440*3,
 
     pollServerForExchangeRatesJob: {
         shouldRun: true,
-        runEvery: 60 //seconds
+        runEvery: 1 //seconds
     }
-}
+};
 
-export let appConfig = new AppConfig();
+// export let appConfig = new AppConfig();
 
 
 
