@@ -14,7 +14,7 @@ import {TypeValidator} from "../../api/TypeValidator";
 class Root extends Component {
   constructor(){
     super();
-    this.state = { formattedExchangeRates: {} };
+    this.state = { currentCoin: Currency.ETH };
   }
 
   componentDidMount() {
@@ -23,6 +23,7 @@ class Root extends Component {
           console.log("polling!");
           this.pollForUpToDateExchangeRates();
       }
+      this.indexExchangeRates();
   }
 
   indexExchangeRates(){
@@ -57,13 +58,22 @@ class Root extends Component {
     }, appConfig.pollServerForExchangeRatesJob.runEvery*1000)
   }
 
+  selectCurrentCoin(currency: Currency ){
+      this.setState({currentCoin: currency})
+  }
+
   render() {
     return (
       <div>
-          <Graph formattedExchangeRates={ this.state.formattedExchangeRates }/>
           <Table formattedExchangeRates={ this.state.formattedExchangeRates }
                  coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
                  apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
+                 />
+          <Graph formattedExchangeRates={ this.state.formattedExchangeRates }
+                 coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
+                 apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
+                 currentCoin={ this.state.currentCoin }
+                 selectCurrentCoin={ this.selectCurrentCoin }
                  />
       </div>
     )

@@ -5,7 +5,7 @@ class ServerConfig {
     constructor() {
         this.sourceCoins = [Currency_1.Currency.BTC];
         this.targetCoins = [Currency_1.Currency.ETH, Currency_1.Currency.DSH, Currency_1.Currency.LTC];
-        this.defaultMinutesBackForExchangeRateQuery = 1440 * 3;
+        this.defaultMinutesBackForExchangeRateQuery = 60;
         this.poloniex = {
             baseUrl: "https://poloniex.com/public?command=returnTicker"
         };
@@ -16,12 +16,12 @@ class ServerConfig {
             baseUrl: "http://www.coincap.io/front"
         };
         this.cryptoTickerJob = {
-            shouldRun: false,
+            shouldRun: true,
             jobName: "get-crypto-ticker-dev",
-            runEvery: '60' //seconds
+            runEvery: '15' //seconds
         };
         this.deleteOldTickerJob = {
-            shouldRun: false,
+            shouldRun: true,
             jobName: "delete-crypto-ticker-dev",
             runEvery: '3600',
             deleteOlderThan: 3600

@@ -1,9 +1,9 @@
 module.exports = {
-    minutesBackForExchangeRateGraphs: 1440*3,
+    minutesBackForExchangeRateGraphs: 60,
 
     pollServerForExchangeRatesJob: {
         shouldRun: true,
-        runEvery: 5 //seconds
+        runEvery: 10 //seconds
     }
 };
 

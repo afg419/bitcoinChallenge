@@ -15,6 +15,7 @@ var react_dom_1 = require("react-dom");
 var react_1 = require("react");
 var ICryptoExchangeRate_1 = require("../../api/ICryptoExchangeRate");
 var ExchangeRateProcesses_1 = require("./util/ExchangeRateProcesses");
+var Currency_1 = require("../../api/Currency");
 var appConfig = require("./config/appConfig");
 var apiConfig = require("../../api/apiConfig");
 var Graph_1 = require("./components/Graph");
@@ -23,7 +24,7 @@ var Root = (function (_super) {
     __extends(Root, _super);
     function Root() {
         var _this = _super.call(this) || this;
-        _this.state = { formattedExchangeRates: {} };
+        _this.state = { currentCoin: Currency_1.Currency.ETH };
         return _this;
     }
     Root.prototype.componentDidMount = function () {
@@ -32,6 +33,7 @@ var Root = (function (_super) {
             console.log("polling!");
             this.pollForUpToDateExchangeRates();
         }
+        this.indexExchangeRates();
     };
     Root.prototype.indexExchangeRates = function () {
         var _this = this;
@@ -58,10 +60,13 @@ var Root = (function (_super) {
             console.log("exchanges");
         }, appConfig.pollServerForExchangeRatesJob.runEvery * 1000);
     };
+    Root.prototype.selectCurrentCoin = function (currency) {
+        this.setState({ currentCoin: currency });
+    };
     Root.prototype.render = function () {
         return (<div>
-          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates}/>
           <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}/>
+          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin} selectCurrentCoin={this.selectCurrentCoin}/>
       </div>);
     };
     return Root;

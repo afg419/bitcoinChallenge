@@ -4,7 +4,7 @@ export class ServerConfig {
     sourceCoins: Currency[] = [ Currency.BTC ];
     targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ];
 
-    defaultMinutesBackForExchangeRateQuery = 1440 * 3;
+    defaultMinutesBackForExchangeRateQuery = 60;
 
     poloniex = {
         baseUrl: "https://poloniex.com/public?command=returnTicker"
@@ -19,13 +19,13 @@ export class ServerConfig {
     };
 
     cryptoTickerJob = {
-        shouldRun: false,
+        shouldRun: true,
         jobName: "get-crypto-ticker-dev",
-        runEvery: '60' //seconds
+        runEvery: '15' //seconds
     };
 
     deleteOldTickerJob = {
-        shouldRun: false,
+        shouldRun: true,
         jobName: "delete-crypto-ticker-dev",
         runEvery: '3600', //seconds, 1 hour
         deleteOlderThan: 3600

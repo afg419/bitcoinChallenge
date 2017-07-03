@@ -1,9 +1,9 @@
 "use strict";
 exports.__esModule = true;
+var ICryptoExchangeRate_1 = require("../../../api/ICryptoExchangeRate");
 var Currency_1 = require("../../../api/Currency");
 var ExchangeRateProcesses_1 = require("../../main/util/ExchangeRateProcesses");
 var chai_1 = require("chai");
-var CryptoExchangeRate_1 = require("../../main/models/CryptoExchangeRate");
 describe('Exchange rate processes', function () {
     var poloniex = "poloniex";
     var btcE = "btcE";
@@ -87,6 +87,19 @@ describe('Exchange rate processes', function () {
         var coins = ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(history);
         chai_1.expect(coins.sort()).to.eql([Currency_1.Currency[Currency_1.Currency.ETH], Currency_1.Currency[Currency_1.Currency.DSH]].sort());
     });
+    it('should get coin history by api', function () {
+        var poloniexCryptos = [];
+        var coinCapCryptos = [];
+        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency_1.Currency.ETH, 0.11); //this guy vs
+        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency_1.Currency.ETH, 0.10); //this guy
+        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency_1.Currency.DSH, 0.4); //This guy vs
+        coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency_1.Currency.DSH, 0.56); //this guy
+        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency_1.Currency.ETH, 1);
+        coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency_1.Currency.DSH, 1);
+        var history = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
+        var coinHistory = ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinHistoryByApi(Currency_1.Currency.ETH, history);
+        chai_1.expect(coinHistory).to.eq(3);
+    });
     //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
     it('should ignore missing apis from history', function () {
         var poloniexCryptos = [];
@@ -102,9 +115,9 @@ describe('Exchange rate processes', function () {
         chai_1.expect(dshResponse).to.eql([poloniexCryptos[2]]);
     });
     var makeCryptoExchangeRate = function (date, apiName, target) {
-        return new CryptoExchangeRate_1.CryptoExchangeRate(date, Currency_1.Currency.BTC, target, 0.11, apiName);
+        return new ICryptoExchangeRate_1.ICryptoExchangeRate(date, Currency_1.Currency.BTC, target, 0.11, apiName);
     };
     var makeCryptoExchangeRateForRank = function (date, apiName, target, rate) {
-        return new CryptoExchangeRate_1.CryptoExchangeRate(date, Currency_1.Currency.BTC, target, rate, apiName);
+        return new ICryptoExchangeRate_1.ICryptoExchangeRate(date, Currency_1.Currency.BTC, target, rate, apiName);
     };
 });

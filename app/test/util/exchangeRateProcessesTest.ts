@@ -2,7 +2,6 @@ import {ICryptoExchangeRate} from "../../../api/ICryptoExchangeRate";
 import {Currency} from "../../../api/Currency";
 import {ExchangeRateProcesses} from "../../main/util/ExchangeRateProcesses";
 import { expect } from 'chai';
-import {CryptoExchangeRate} from "../../main/models/CryptoExchangeRate";
 
 
 describe('Exchange rate processes', () => {
@@ -113,6 +112,25 @@ describe('Exchange rate processes', () => {
         expect(coins.sort()).to.eql([Currency[Currency.ETH], Currency[Currency.DSH]].sort());
     });
 
+    it('should get coin history by api', () => {
+        let poloniexCryptos: ICryptoExchangeRate[] = [];
+        let coinCapCryptos: ICryptoExchangeRate[] = [];
+
+        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
+        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
+
+        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency.DSH, 0.4); //This guy vs
+        coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency.DSH, 0.56); //this guy
+
+        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
+        coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency.DSH, 1);
+
+        let history = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
+
+        let coinHistory = ExchangeRateProcesses.getCoinHistoryByApi(Currency.ETH, history);
+        expect(coinHistory).to.eq(3);
+    });
+
     //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
     it('should ignore missing apis from history', () => {
         let poloniexCryptos: ICryptoExchangeRate[] = [];
@@ -132,7 +150,7 @@ describe('Exchange rate processes', () => {
     });
 
     let makeCryptoExchangeRate = function(date: Date, apiName: string, target: Currency): ICryptoExchangeRate {
-        return new CryptoExchangeRate (
+        return new ICryptoExchangeRate (
             date,
             Currency.BTC,
             target,
@@ -142,7 +160,7 @@ describe('Exchange rate processes', () => {
     };
 
     let makeCryptoExchangeRateForRank = function(date: Date, apiName: string, target: Currency, rate: number): ICryptoExchangeRate {
-        return new CryptoExchangeRate(
+        return new ICryptoExchangeRate(
             date,
             Currency.BTC,
             target,

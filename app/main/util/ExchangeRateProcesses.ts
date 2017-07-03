@@ -44,6 +44,17 @@ export class ExchangeRateProcesses {
         return _.uniq(toReturn);
     }
 
+    static getCoinHistoryByApi(currentCoin: Currency, exchangeHistory: { [key:string]: { [key:string]: ICryptoExchangeRate[]}; }): { [key:string]: ICryptoExchangeRate[]} {
+        if(isNullOrUndefined(exchangeHistory)) { }
+
+        let toReturn: { [key:string]: ICryptoExchangeRate[]} = {};
+        for( let apiName in exchangeHistory ){
+            toReturn[apiName] = exchangeHistory[apiName][currentCoin];
+        }
+
+        return toReturn;
+    }
+
 
     //returns exchange rates as such { apiName: { target: [ exchanges ] } }
     static formatExchangeRateHistory(startDate: Date, endDate: Date, exchangeRates: ICryptoExchangeRate[]): { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } {
