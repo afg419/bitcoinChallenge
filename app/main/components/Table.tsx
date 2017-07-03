@@ -11,8 +11,6 @@ const apiConfig = require("../../../api/apiConfig");
 export class Table extends Component {
     constructor(){
         super();
-        this.state = { formattedExchangeRates: {"Poloniex": {}, "BTC-e":{}, "CoinCap": {}} };
-
     }
 
     componentDidUpdate(){
@@ -20,11 +18,9 @@ export class Table extends Component {
     }
 
     apiRankingTable(){
-        let coins = ExchangeRateProcesses.getCoinsInHistory(this.props.formattedExchangeRates);
-        console.log(coins);
         let toReturn = [];
 
-        for(let coin of coins){
+        for(let coin of this.props.coins){
             toReturn.push(this.apiRankingRow(ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, coin), coin))
         }
 

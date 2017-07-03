@@ -32,7 +32,7 @@ class Root extends Component {
           res => res.json()
       ).then(rawExchangeRates => {
           return rawExchangeRates.map( ier => {
-                return new CryptoExchangeRate(
+                return new ICryptoExchangeRate (
                       new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName
                   )
               }
@@ -61,7 +61,10 @@ class Root extends Component {
     return (
       <div>
           <Graph formattedExchangeRates={ this.state.formattedExchangeRates }/>
-          <Table formattedExchangeRates={ this.state.formattedExchangeRates }/>
+          <Table formattedExchangeRates={ this.state.formattedExchangeRates }
+                 coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
+                 apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
+                 />
       </div>
     )
   }

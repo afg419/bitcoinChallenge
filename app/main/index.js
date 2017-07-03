@@ -13,8 +13,8 @@ exports.__esModule = true;
 var React = require("react");
 var react_dom_1 = require("react-dom");
 var react_1 = require("react");
+var ICryptoExchangeRate_1 = require("../../api/ICryptoExchangeRate");
 var ExchangeRateProcesses_1 = require("./util/ExchangeRateProcesses");
-var CryptoExchangeRate_1 = require("./models/CryptoExchangeRate");
 var appConfig = require("./config/appConfig");
 var apiConfig = require("../../api/apiConfig");
 var Graph_1 = require("./components/Graph");
@@ -39,7 +39,7 @@ var Root = (function (_super) {
         console.log("Getting up to date exchange rates");
         return fetch(url).then(function (res) { return res.json(); }).then(function (rawExchangeRates) {
             return rawExchangeRates.map(function (ier) {
-                return new CryptoExchangeRate_1.CryptoExchangeRate(new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName);
+                return new ICryptoExchangeRate_1.ICryptoExchangeRate(new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName);
             }).filter(function (er) { return er.valid(); });
         }).then(function (exchangeRates) {
             var now = new Date();
@@ -61,7 +61,7 @@ var Root = (function (_super) {
     Root.prototype.render = function () {
         return (<div>
           <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates}/>
-          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates}/>
+          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}/>
       </div>);
     };
     return Root;

@@ -39,6 +39,16 @@ var ExchangeRateProcesses = (function () {
         }
         return _.uniq(toReturn);
     };
+    ExchangeRateProcesses.getApisInHistory = function (exchangeHistory) {
+        if (util_1.isNullOrUndefined(exchangeHistory)) {
+            return [];
+        }
+        var toReturn = [];
+        for (var apiName in exchangeHistory) {
+            toReturn.push(apiName);
+        }
+        return _.uniq(toReturn);
+    };
     //returns exchange rates as such { apiName: { target: [ exchanges ] } }
     ExchangeRateProcesses.formatExchangeRateHistory = function (startDate, endDate, exchangeRates) {
         //filters out out of date exchanges, and sorts them by date descending
