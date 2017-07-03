@@ -74,6 +74,19 @@ describe('Exchange rate processes', function () {
         chai_1.expect(ethResponse).to.eql([poloniexCryptos[1], coinCapCryptos[0]]);
         chai_1.expect(dshResponse).to.eql([coinCapCryptos[2], poloniexCryptos[2]]);
     });
+    it('should extract all present coins', function () {
+        var poloniexCryptos = [];
+        var coinCapCryptos = [];
+        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency_1.Currency.ETH, 0.11); //this guy vs
+        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency_1.Currency.ETH, 0.10); //this guy
+        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency_1.Currency.DSH, 0.4); //This guy vs
+        coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency_1.Currency.DSH, 0.56); //this guy
+        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency_1.Currency.ETH, 1);
+        coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency_1.Currency.DSH, 1);
+        var history = ExchangeRateProcesses_1.ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos));
+        var coins = ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(history);
+        chai_1.expect(coins.sort()).to.eql([Currency_1.Currency[Currency_1.Currency.ETH], Currency_1.Currency[Currency_1.Currency.DSH]].sort());
+    });
     //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
     it('should ignore missing apis from history', function () {
         var poloniexCryptos = [];

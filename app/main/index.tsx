@@ -7,12 +7,14 @@ import { CryptoExchangeRate } from "./models/CryptoExchangeRate";
 import {Currency} from "../../api/Currency";
 const appConfig =  require("./config/appConfig");
 const apiConfig = require("../../api/apiConfig");
+import {Graph} from "./components/Graph";
+import {Table} from "./components/Table";
+import {TypeValidator} from "../../api/TypeValidator";
 
 class Root extends Component {
   constructor(){
     super();
     this.state = { formattedExchangeRates: {} };
-
   }
 
   componentDidMount() {
@@ -49,14 +51,18 @@ class Root extends Component {
   }
 
   pollForUpToDateExchangeRates() {
-    setTimeout(() => {
+    setInterval(() => {
       this.indexExchangeRates();
-    }, appConfig.pollServerForExchangeRatesJob.runEvery * 1000)
+        console.log("exchanges")
+    }, appConfig.pollServerForExchangeRatesJob.runEvery*1000)
   }
 
   render() {
     return (
-      <div>"YO"</div>
+      <div>
+          <Graph formattedExchangeRates={ this.state.formattedExchangeRates }/>
+          <Table formattedExchangeRates={ this.state.formattedExchangeRates }/>
+      </div>
     )
   }
 }

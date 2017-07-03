@@ -17,6 +17,8 @@ var ExchangeRateProcesses_1 = require("./util/ExchangeRateProcesses");
 var CryptoExchangeRate_1 = require("./models/CryptoExchangeRate");
 var appConfig = require("./config/appConfig");
 var apiConfig = require("../../api/apiConfig");
+var Graph_1 = require("./components/Graph");
+var Table_1 = require("./components/Table");
 var Root = (function (_super) {
     __extends(Root, _super);
     function Root() {
@@ -51,12 +53,16 @@ var Root = (function (_super) {
     };
     Root.prototype.pollForUpToDateExchangeRates = function () {
         var _this = this;
-        setTimeout(function () {
+        setInterval(function () {
             _this.indexExchangeRates();
+            console.log("exchanges");
         }, appConfig.pollServerForExchangeRatesJob.runEvery * 1000);
     };
     Root.prototype.render = function () {
-        return (<div>"YO"</div>);
+        return (<div>
+          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates}/>
+          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates}/>
+      </div>);
     };
     return Root;
 }(react_1.Component));

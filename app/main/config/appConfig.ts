@@ -3,7 +3,7 @@ module.exports = {
 
     pollServerForExchangeRatesJob: {
         shouldRun: true,
-        runEvery: 1 //seconds
+        runEvery: 5 //seconds
     }
 };
 

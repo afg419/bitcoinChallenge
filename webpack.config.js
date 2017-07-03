@@ -17,7 +17,7 @@ module.exports = {
        test: /.jsx?$/,
        loader: 'babel-loader',
        include: path.join(__dirname, 'app'),
-       exclude: /node_modules/,
+       exclude: /node_modulces/,
        query: {
          presets: ['es2015', 'react']
        }
