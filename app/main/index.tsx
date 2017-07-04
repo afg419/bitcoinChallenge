@@ -10,6 +10,7 @@ const apiConfig = require("../../api/apiConfig");
 import {Graph} from "./components/Graph";
 import {Table} from "./components/Table";
 import {TypeValidator} from "../../api/TypeValidator";
+import {CoinSelect} from "./components/CoinSelect";
 
 class Root extends Component {
   constructor(){
@@ -59,21 +60,29 @@ class Root extends Component {
   }
 
   selectCurrentCoin(currency: Currency ){
-      this.setState({currentCoin: currency})
+      this.setState({ currentCoin: currency })
   }
 
-  render() {
+
+    private allCoins(){
+        return ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates);
+    }
+
+    render() {
     return (
       <div>
+          <CoinSelect allCoins={this.allCoins()} currentCoin={this.state.currentCoin} selectCurrentCoin={ this.selectCurrentCoin.bind(this) }/>
+
           <Table formattedExchangeRates={ this.state.formattedExchangeRates }
                  coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
                  apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
-                 />
+                 currentCoin={ this.state.currentCoin }
+          />
+
           <Graph formattedExchangeRates={ this.state.formattedExchangeRates }
                  coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
                  apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
                  currentCoin={ this.state.currentCoin }
-                 selectCurrentCoin={ this.selectCurrentCoin }
                  />
       </div>
     )

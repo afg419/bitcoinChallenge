@@ -12,24 +12,14 @@ var __extends = (this && this.__extends) || (function () {
 exports.__esModule = true;
 var React = require("react");
 var react_1 = require("react");
-var ExchangeRateProcesses_1 = require("../util/ExchangeRateProcesses");
 var react_chartjs_2_1 = require("react-chartjs-2");
 var Currency_1 = require("../../../api/Currency");
 var GraphColors_1 = require("../util/GraphColors");
-var Dropdown = require('react-simple-dropdown');
-"";
-var DropdownTrigger = Dropdown.DropdownTrigger;
-"";
-var DropdownContent = Dropdown.DropdownContent;
-"";
 var Graph = (function (_super) {
     __extends(Graph, _super);
     function Graph() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Graph.prototype.currentData = function () {
-        return ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinHistoryByApi(this.props.currentCoin, this.props.formattedExchangeRates);
-    };
     Graph.prototype.graphData = function () {
         var history = this.props.formattedExchangeRates;
         var dataToReturn = [];
@@ -40,30 +30,15 @@ var Graph = (function (_super) {
                     return { x: er.date.toISOString(), y: er.rate };
                 }),
                 backgroundColor: "rgba(255,255,255,0)",
-                // fillColor: "rgba(0, 0, 0, 1)"
-                borderColor: GraphColors_1.Color.toColor(apiName)
+                borderColor: GraphColors_1.Color.toColor(apiName),
+                lineTension: 0
             });
         }
         console.log(dataToReturn);
         return dataToReturn;
     };
-    Graph.prototype.dropDown = function () {
-        return <Dropdown>
-            <DropdownTrigger>Profile</DropdownTrigger>
-            <DropdownContent>
-                <ul>
-                    <li>
-                        <a href="/profile">BTC</a>
-                    </li>
-                    <li>
-                        <a href="/favorites">Favorites</a>
-                    </li>
-                    <li>
-                        <a href="/logout">Log Out</a>
-                    </li>
-                </ul>
-            </DropdownContent>
-        </Dropdown>;
+    Graph.prototype._onSelect = function (it) {
+        console.log(it);
     };
     Graph.prototype.render = function () {
         return <div>

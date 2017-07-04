@@ -19,11 +19,8 @@ var apiConfig = require("../../../api/apiConfig");
 var Table = (function (_super) {
     __extends(Table, _super);
     function Table() {
-        return _super.call(this) || this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Table.prototype.componentDidUpdate = function () {
-        this.render();
-    };
     Table.prototype.apiRankingTable = function () {
         var toReturn = [];
         for (var _i = 0, _a = this.props.coins; _i < _a.length; _i++) {
@@ -36,35 +33,25 @@ var Table = (function (_super) {
     };
     Table.prototype.apiRankingRow = function (coinExchangeRates, currency) {
         console.log(coinExchangeRates);
-        return <tr key={currency}>
-            <td>{Currency_1.Currency[currency]}</td>
+        return <ul key={currency}>
             {this.apiRankingCell(coinExchangeRates[0])}
             {this.apiRankingCell(coinExchangeRates[1])}
             {this.apiRankingCell(coinExchangeRates[2])}
-        </tr>;
+        </ul>;
     };
     Table.prototype.apiRankingCell = function (cryptoExchangeRate) {
         if (util_1.isNullOrUndefined(cryptoExchangeRate)) {
             return "--";
         }
-        return <td>{cryptoExchangeRate.apiName}: {cryptoExchangeRate.rate}</td>;
-    };
-    Table.prototype.getETHRankings = function () {
-        return this.state.formattedExchangeRates;
-    };
-    Table.prototype.getNum = function () {
-    };
-    Table.prototype.getDSHRankings = function () {
-        return this.props.formattedExchangeRates;
-    };
-    Table.prototype.getLTCRankings = function () {
-        return this.state.formattedExchangeRates;
+        return <li>{cryptoExchangeRate.apiName}: {cryptoExchangeRate.rate.toFixed(6)} {Currency_1.Currency[this.props.currentCoin]} per BTC </li>;
     };
     Table.prototype.render = function () {
+        var currentCoin = this.props.currentCoin;
         return (<div>
-            <table className="game-board">
-                {this.apiRankingTable()}
-            </table>
+            <h2>Exchange rates for BTC to {Currency_1.Currency[currentCoin]}</h2>
+            <div className="rankings">
+                {this.apiRankingRow(ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, currentCoin), currentCoin)}
+            </div>
         </div>);
     };
     return Table;

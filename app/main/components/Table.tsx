@@ -4,19 +4,11 @@ import { Component } from "react";
 import {Currency} from "../../../api/Currency";
 import {TypeValidator} from "../../../api/TypeValidator";
 import {ExchangeRateProcesses} from "../util/ExchangeRateProcesses";
-import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
+import {ICryptoExchangeRate} from "../../../api/ICryptoExchangeRate";
 const apiConfig = require("../../../api/apiConfig");
 
 export class Table extends Component {
-    constructor(){
-        super();
-    }
-
-    componentDidUpdate(){
-        this.render()
-    }
-
     apiRankingTable(){
         let toReturn = [];
 
@@ -29,44 +21,29 @@ export class Table extends Component {
         </tbody>
     }
 
-    apiRankingRow(coinExchangeRates: CryptoExchangeRate[], currency: Currency){
+    apiRankingRow(coinExchangeRates: ICryptoExchangeRate[], currency: Currency){
         console.log(coinExchangeRates)
-        return <tr key={currency}>
-            <td>{Currency[currency]}</td>
+        return <ul key={currency}>
             {this.apiRankingCell(coinExchangeRates[0])}
             {this.apiRankingCell(coinExchangeRates[1])}
             {this.apiRankingCell(coinExchangeRates[2])}
-        </tr>
+        </ul>
     }
 
-    apiRankingCell(cryptoExchangeRate: CryptoExchangeRate){
+    apiRankingCell(cryptoExchangeRate: ICryptoExchangeRate){
         if(isNullOrUndefined(cryptoExchangeRate)){
             return "--"
         }
-        return <td>{cryptoExchangeRate.apiName}: {cryptoExchangeRate.rate}</td>
+        return <li>{cryptoExchangeRate.apiName}: {cryptoExchangeRate.rate.toFixed(6)} {Currency[this.props.currentCoin]} per BTC </li>
     }
-
-    getETHRankings(){
-        return this.state.formattedExchangeRates;
-    }
-
-    getNum(){
-    }
-
-    getDSHRankings(){
-        return this.props.formattedExchangeRates;
-    }
-
-    getLTCRankings(){
-        return this.state.formattedExchangeRates;
-    }
-
 
     render(){
+        let {currentCoin} = this.props;
         return (<div>
-            <table className="game-board">
-                {this.apiRankingTable()}
-            </table>
+            <h2>Exchange rates for BTC to { Currency[currentCoin] }</h2>
+            <div className="rankings">
+                {this.apiRankingRow(ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, currentCoin), currentCoin)}
+            </div>
         </div>)
     }
 }

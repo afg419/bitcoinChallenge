@@ -6,15 +6,10 @@ import {Bar, Doughnut, Line} from 'react-chartjs-2';
 import {Currency} from "../../../api/Currency";
 import {Color} from "../util/GraphColors";
 
-const Dropdown = require('react-simple-dropdown');``
-const DropdownTrigger = Dropdown.DropdownTrigger;``
-const DropdownContent = Dropdown.DropdownContent;``
-
+import Select from 'react-select';
+import {CoinSelect} from "./CoinSelect";
 
 export class Graph extends Component {
-    currentData(){
-        return ExchangeRateProcesses.getCoinHistoryByApi(this.props.currentCoin, this.props.formattedExchangeRates);
-    }
 
     private graphData(): any[]{
         let history = this.props.formattedExchangeRates;
@@ -26,31 +21,16 @@ export class Graph extends Component {
                     return {x: er.date.toISOString(), y: er.rate }
                 }),
                 backgroundColor: "rgba(255,255,255,0)",
-                // fillColor: "rgba(0, 0, 0, 1)"
-                borderColor: Color.toColor(apiName)
+                borderColor: Color.toColor(apiName),
+                lineTension: 0
             })
         }
         console.log(dataToReturn)
         return dataToReturn;
     }
 
-    private dropDown(): any {
-        return <Dropdown>
-            <DropdownTrigger>Profile</DropdownTrigger>
-            <DropdownContent>
-                <ul>
-                    <li>
-                        <a href="/profile">BTC</a>
-                    </li>
-                    <li>
-                        <a href="/favorites">Favorites</a>
-                    </li>
-                    <li>
-                        <a href="/logout">Log Out</a>
-                    </li>
-                </ul>
-            </DropdownContent>
-        </Dropdown>
+    private _onSelect(it){
+        console.log(it);
     }
 
     render(){
@@ -95,6 +75,5 @@ export class Graph extends Component {
                     }
                 }
         /></div>
-
     }
 }

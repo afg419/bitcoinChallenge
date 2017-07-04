@@ -20,6 +20,7 @@ var appConfig = require("./config/appConfig");
 var apiConfig = require("../../api/apiConfig");
 var Graph_1 = require("./components/Graph");
 var Table_1 = require("./components/Table");
+var CoinSelect_1 = require("./components/CoinSelect");
 var Root = (function (_super) {
     __extends(Root, _super);
     function Root() {
@@ -63,10 +64,16 @@ var Root = (function (_super) {
     Root.prototype.selectCurrentCoin = function (currency) {
         this.setState({ currentCoin: currency });
     };
+    Root.prototype.allCoins = function () {
+        return ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates);
+    };
     Root.prototype.render = function () {
         return (<div>
-          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}/>
-          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin} selectCurrentCoin={this.selectCurrentCoin}/>
+          <CoinSelect_1.CoinSelect allCoins={this.allCoins()} currentCoin={this.state.currentCoin} selectCurrentCoin={this.selectCurrentCoin.bind(this)}/>
+
+          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
+
+          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
       </div>);
     };
     return Root;
