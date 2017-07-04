@@ -24,10 +24,11 @@ var CoinSelect_1 = require("./components/CoinSelect");
 var Root = (function (_super) {
     __extends(Root, _super);
     function Root() {
-        var _this = _super.call(this) || this;
-        _this.state = { currentCoin: Currency_1.Currency.ETH };
-        return _this;
+        return _super.call(this) || this;
     }
+    Root.prototype.componentWillMount = function () {
+        this.setState({ currentCoin: Currency_1.Currency.ETH, formattedExchangeRates: {} });
+    };
     Root.prototype.componentDidMount = function () {
         console.log(appConfig);
         if (appConfig.pollServerForExchangeRatesJob.shouldRun) {
@@ -71,9 +72,9 @@ var Root = (function (_super) {
         return (<div>
           <CoinSelect_1.CoinSelect allCoins={this.allCoins()} currentCoin={this.state.currentCoin} selectCurrentCoin={this.selectCurrentCoin.bind(this)}/>
 
-          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
+          <Table_1.Table formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
 
-          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} apiNames={ExchangeRateProcesses_1.ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
+          <Graph_1.Graph formattedExchangeRates={this.state.formattedExchangeRates} coins={ExchangeRateProcesses_1.ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)} currentCoin={this.state.currentCoin}/>
       </div>);
     };
     return Root;

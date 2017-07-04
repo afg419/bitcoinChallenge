@@ -15,22 +15,11 @@ var react_1 = require("react");
 var Currency_1 = require("../../../api/Currency");
 var ExchangeRateProcesses_1 = require("../util/ExchangeRateProcesses");
 var util_1 = require("util");
-var apiConfig = require("../../../api/apiConfig");
 var Table = (function (_super) {
     __extends(Table, _super);
     function Table() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        return _super.call(this) || this;
     }
-    Table.prototype.apiRankingTable = function () {
-        var toReturn = [];
-        for (var _i = 0, _a = this.props.coins; _i < _a.length; _i++) {
-            var coin = _a[_i];
-            toReturn.push(this.apiRankingRow(ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, coin), coin));
-        }
-        return <tbody>
-            {toReturn}
-        </tbody>;
-    };
     Table.prototype.apiRankingRow = function (coinExchangeRates, currency) {
         console.log(coinExchangeRates);
         return <ul key={currency}>
@@ -57,39 +46,3 @@ var Table = (function (_super) {
     return Table;
 }(react_1.Component));
 exports.Table = Table;
-//
-// <tbody>
-// <tr>
-//     <td className={"cell-00"}>
-//         <div>{this.getNum()}</div>
-//     </td>
-//     <td className={"cell-01"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-02"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// <tr>
-//     <td className={"cell-10"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-11"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-12"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// <tr>
-//     <td className={"cell-20"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-21"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-22"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// </tbody> 

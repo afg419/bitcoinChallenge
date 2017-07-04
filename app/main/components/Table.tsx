@@ -6,19 +6,16 @@ import {TypeValidator} from "../../../api/TypeValidator";
 import {ExchangeRateProcesses} from "../util/ExchangeRateProcesses";
 import {isNullOrUndefined} from "util";
 import {ICryptoExchangeRate} from "../../../api/ICryptoExchangeRate";
-const apiConfig = require("../../../api/apiConfig");
 
-export class Table extends Component {
-    apiRankingTable(){
-        let toReturn = [];
+interface TableProps {
+    formattedExchangeRates: any
+    coins: Currency[]
+    currentCoin: Currency
+}
 
-        for(let coin of this.props.coins){
-            toReturn.push(this.apiRankingRow(ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, coin), coin))
-        }
-
-        return <tbody>
-            {toReturn}
-        </tbody>
+export class Table extends Component<TableProps, {}> {
+    constructor(){
+        super()
     }
 
     apiRankingRow(coinExchangeRates: ICryptoExchangeRate[], currency: Currency){
@@ -47,39 +44,3 @@ export class Table extends Component {
         </div>)
     }
 }
-//
-// <tbody>
-// <tr>
-//     <td className={"cell-00"}>
-//         <div>{this.getNum()}</div>
-//     </td>
-//     <td className={"cell-01"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-02"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// <tr>
-//     <td className={"cell-10"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-11"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-12"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// <tr>
-//     <td className={"cell-20"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-21"}>
-//         <div>hey</div>
-//     </td>
-//     <td className={"cell-22"}>
-//         <div>hey</div>
-//     </td>
-// </tr>
-// </tbody>

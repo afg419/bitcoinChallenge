@@ -3,19 +3,25 @@ import { render } from 'react-dom'
 import { Component } from "react";
 import { ICryptoExchangeRate } from "../../api/ICryptoExchangeRate";
 import { ExchangeRateProcesses } from "./util/ExchangeRateProcesses";
-import { CryptoExchangeRate } from "./models/CryptoExchangeRate";
 import {Currency} from "../../api/Currency";
 const appConfig =  require("./config/appConfig");
 const apiConfig = require("../../api/apiConfig");
 import {Graph} from "./components/Graph";
 import {Table} from "./components/Table";
-import {TypeValidator} from "../../api/TypeValidator";
 import {CoinSelect} from "./components/CoinSelect";
 
-class Root extends Component {
+interface RootState {
+    currentCoin: Currency
+    formattedExchangeRates: any
+}
+
+class Root extends Component<{}, RootState> {
   constructor(){
     super();
-    this.state = { currentCoin: Currency.ETH };
+  }
+
+  componentWillMount(){
+      this.setState({ currentCoin: Currency.ETH, formattedExchangeRates: {} }) ;
   }
 
   componentDidMount() {
@@ -71,17 +77,21 @@ class Root extends Component {
     render() {
     return (
       <div>
-          <CoinSelect allCoins={this.allCoins()} currentCoin={this.state.currentCoin} selectCurrentCoin={ this.selectCurrentCoin.bind(this) }/>
+          <CoinSelect
+                allCoins={this.allCoins()}
+                currentCoin={this.state.currentCoin}
+                selectCurrentCoin={ this.selectCurrentCoin.bind(this) }
+          />
 
-          <Table formattedExchangeRates={ this.state.formattedExchangeRates }
+          <Table
+                formattedExchangeRates={ this.state.formattedExchangeRates }
                  coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
-                 apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
                  currentCoin={ this.state.currentCoin }
           />
 
-          <Graph formattedExchangeRates={ this.state.formattedExchangeRates }
+          <Graph
+                formattedExchangeRates={ this.state.formattedExchangeRates }
                  coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
-                 apiNames={ ExchangeRateProcesses.getApisInHistory(this.state.formattedExchangeRates)}
                  currentCoin={ this.state.currentCoin }
                  />
       </div>

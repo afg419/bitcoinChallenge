@@ -4,7 +4,17 @@ import { Component } from "react";
 import {Currency} from "../../../api/Currency";
 const apiConfig = require("../../../api/apiConfig");
 
-export class CoinSelect extends Component {
+interface CoinSelectProps {
+    allCoins: Currency[]
+    currentCoin: Currency
+    selectCurrentCoin:any
+}
+
+export class CoinSelect extends Component<CoinSelectProps, {}> {
+    constructor(){
+        super()
+    }
+    
     buttons(): any[]{
         let toReturn = [];
         for(let currency in this.props.allCoins){

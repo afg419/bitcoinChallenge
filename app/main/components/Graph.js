@@ -18,7 +18,7 @@ var GraphColors_1 = require("../util/GraphColors");
 var Graph = (function (_super) {
     __extends(Graph, _super);
     function Graph() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        return _super.call(this) || this;
     }
     Graph.prototype.graphData = function () {
         var history = this.props.formattedExchangeRates;
@@ -43,7 +43,6 @@ var Graph = (function (_super) {
     Graph.prototype.render = function () {
         return <div>
             <react_chartjs_2_1.Line data={{
-            // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
             datasets: this.graphData()
         }} width={400} height={150} options={{
             responsive: true,

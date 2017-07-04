@@ -1,15 +1,20 @@
 import * as React from 'react'
 import { render } from 'react-dom'
 import { Component } from "react";
-import {ExchangeRateProcesses} from "../util/ExchangeRateProcesses";
-import {Bar, Doughnut, Line} from 'react-chartjs-2';
+import {Line} from 'react-chartjs-2';
 import {Currency} from "../../../api/Currency";
 import {Color} from "../util/GraphColors";
 
-import Select from 'react-select';
-import {CoinSelect} from "./CoinSelect";
+interface GraphProps {
+    formattedExchangeRates: any
+    coins: Currency[]
+    currentCoin: Currency
+}
 
-export class Graph extends Component {
+export class Graph extends Component<GraphProps, {}> {
+    constructor(){
+        super()
+    }
 
     private graphData(): any[]{
         let history = this.props.formattedExchangeRates;
@@ -37,7 +42,6 @@ export class Graph extends Component {
         return <div>
             <Line
                 data={{
-                    // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
                     datasets: this.graphData(),
                 }}
                 width={400}
