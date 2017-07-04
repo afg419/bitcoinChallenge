@@ -6,3 +6,4 @@ module.exports = {
     }
 };
 // export let appConfig = new AppConfig();
+//# sourceMappingURL=appConfig.js.map

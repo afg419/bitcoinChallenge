@@ -1,21 +1,19 @@
 "use strict";
-exports.__esModule = true;
-var Color = (function () {
-    function Color() {
-    }
-    Color.rgbValue = function (str) {
-        var hash = 0;
-        for (var i = 0; i < str.length; i++) {
+Object.defineProperty(exports, "__esModule", { value: true });
+class Color {
+    static rgbValue(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         return hash % 256;
-    };
-    Color.toColor = function (apiString) {
-        var seed1 = apiString;
-        var seed2 = apiString + "a";
-        var seed3 = apiString + "x";
-        return "rgba(" + Color.rgbValue(seed1) + ", " + Color.rgbValue(seed2) + ", " + Color.rgbValue(seed3) + ", 1)";
-    };
-    return Color;
-}());
+    }
+    static toColor(apiString) {
+        let seed1 = apiString;
+        let seed2 = apiString + "a";
+        let seed3 = apiString + "x";
+        return `rgba(${Color.rgbValue(seed1)}, ${Color.rgbValue(seed2)}, ${Color.rgbValue(seed3)}, 1)`;
+    }
+}
 exports.Color = Color;
+//# sourceMappingURL=GraphColors.js.map

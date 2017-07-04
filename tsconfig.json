@@ -8,11 +8,12 @@
   },
   "include": [
     "src/main/**/*.ts",
-    "src/test/**/*.ts"
+    "src/test/**/*.ts",
+    "app/main/**/*.ts",
+    "app/main/**/*.tsx"
   ],
   "exclude": [
     "node_modules/",
-    "app/",
     "api/"
   ]
 }

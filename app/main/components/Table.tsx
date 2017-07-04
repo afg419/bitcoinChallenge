@@ -19,7 +19,6 @@ export class Table extends Component<TableProps, {}> {
     }
 
     apiRankingRow(coinExchangeRates: ICryptoExchangeRate[], currency: Currency){
-        console.log(coinExchangeRates)
         return <ul key={currency}>
             {this.apiRankingCell(coinExchangeRates[0])}
             {this.apiRankingCell(coinExchangeRates[1])}

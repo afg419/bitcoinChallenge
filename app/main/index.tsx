@@ -16,36 +16,32 @@ interface RootState {
 }
 
 class Root extends Component<{}, RootState> {
-  constructor(){
-    super();
-  }
+    constructor(){
+        super();
+    }
 
-  componentWillMount(){
-      this.setState({ currentCoin: Currency.ETH, formattedExchangeRates: {} }) ;
-  }
-
-  componentDidMount() {
-      console.log(appConfig);
-      if(appConfig.pollServerForExchangeRatesJob.shouldRun){
+    componentDidMount(): void {
+        this.setState({ currentCoin: Currency.ETH, formattedExchangeRates: {} }) ;
+        if(appConfig.pollServerForExchangeRatesJob.shouldRun){
           console.log("polling!");
           this.pollForUpToDateExchangeRates();
-      }
-      this.indexExchangeRates();
-  }
+        }
+        this.indexExchangeRates();
+    }
 
-  indexExchangeRates(){
-      let url = `http://localhost:${apiConfig.port}${apiConfig.indexExchangeRatesPath}`;
-      console.log("Getting up to date exchange rates");
-      return fetch(url).then(
+    indexExchangeRates(): void {
+        let url = `http://localhost:${apiConfig.port}${apiConfig.indexExchangeRatesPath}`;
+        console.log("Getting up to date exchange rates");
+        fetch(url).then(
           res => res.json()
-      ).then(rawExchangeRates => {
+        ).then(rawExchangeRates => {
           return rawExchangeRates.map( ier => {
                 return new ICryptoExchangeRate (
                       new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName
                   )
               }
           ).filter(er => er.valid());
-      }).then(exchangeRates => {
+        }).then(exchangeRates => {
           let now = new Date();
           let then = new Date(now);
           then.setMinutes(now.getMinutes() - appConfig.minutesBackForExchangeRateGraphs*1000);
@@ -53,49 +49,48 @@ class Root extends Component<{}, RootState> {
           let formattedExchangeRates : { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } = ExchangeRateProcesses.formatExchangeRateHistory(then, now, exchangeRates as ICryptoExchangeRate[])
 
           this.setState({ formattedExchangeRates: formattedExchangeRates });
-      }).catch( err => {
+        }).catch( err => {
           console.error("Exception while querying for most up to date exchange rates: " + err);
-      })
-  }
+        })
+    }
 
-  pollForUpToDateExchangeRates() {
-    setInterval(() => {
-      this.indexExchangeRates();
-        console.log("exchanges")
-    }, appConfig.pollServerForExchangeRatesJob.runEvery*1000)
-  }
+    pollForUpToDateExchangeRates(): void {
+        setInterval(() => {
+          this.indexExchangeRates();
+            console.log("exchanges")
+        }, appConfig.pollServerForExchangeRatesJob.runEvery*1000)
+    }
 
-  selectCurrentCoin(currency: Currency ){
-      this.setState({ currentCoin: currency })
-  }
+    selectCurrentCoin(currency: Currency ): void {
+        this.setState({ currentCoin: currency })
+    }
 
-
-    private allCoins(){
+    private allCoins(): Currency[] {
         return ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates);
     }
 
     render() {
-    return (
-      <div>
-          <CoinSelect
-                allCoins={this.allCoins()}
-                currentCoin={this.state.currentCoin}
-                selectCurrentCoin={ this.selectCurrentCoin.bind(this) }
-          />
+        return (
+          <div>
+              <CoinSelect
+                    allCoins={this.allCoins()}
+                    currentCoin={this.state.currentCoin}
+                    selectCurrentCoin={ this.selectCurrentCoin.bind(this) }
+              />
 
-          <Table
-                formattedExchangeRates={ this.state.formattedExchangeRates }
-                 coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
-                 currentCoin={ this.state.currentCoin }
-          />
+              <Table
+                    formattedExchangeRates={ this.state.formattedExchangeRates }
+                     coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
+                     currentCoin={ this.state.currentCoin }
+              />
 
-          <Graph
-                formattedExchangeRates={ this.state.formattedExchangeRates }
-                 coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
-                 currentCoin={ this.state.currentCoin }
-                 />
-      </div>
-    )
+              <Graph
+                    formattedExchangeRates={ this.state.formattedExchangeRates }
+                     coins={ ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
+                     currentCoin={ this.state.currentCoin }
+                     />
+          </div>
+        )
   }
 }
 
