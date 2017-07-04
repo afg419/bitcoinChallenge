@@ -2,60 +2,99 @@ import * as React from 'react'
 import { render } from 'react-dom'
 import { Component } from "react";
 import {ExchangeRateProcesses} from "../util/ExchangeRateProcesses";
-const Chart = require('../assets/resources/Chart.bundle.min.js')
+import {Bar, Doughnut, Line} from 'react-chartjs-2';
+import {Currency} from "../../../api/Currency";
+import {Color} from "../util/GraphColors";
+
+const Dropdown = require('react-simple-dropdown');``
+const DropdownTrigger = Dropdown.DropdownTrigger;``
+const DropdownContent = Dropdown.DropdownContent;``
+
 
 export class Graph extends Component {
     currentData(){
         return ExchangeRateProcesses.getCoinHistoryByApi(this.props.currentCoin, this.props.formattedExchangeRates);
     }
 
-    // datum(data){
-    //     return <span>{data.date}</span>
-    // }
+    private graphData(): any[]{
+        let history = this.props.formattedExchangeRates;
+        let dataToReturn = [];
+        for( let apiName in history ){
+            dataToReturn.push({
+                label: apiName,
+                data: history[apiName][this.props.currentCoin].map( er => {
+                    return {x: er.date.toISOString(), y: er.rate }
+                }),
+                backgroundColor: "rgba(255,255,255,0)",
+                // fillColor: "rgba(0, 0, 0, 1)"
+                borderColor: Color.toColor(apiName)
+            })
+        }
+        console.log(dataToReturn)
+        return dataToReturn;
+    }
 
-    renderGraph(){
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: `${this.props.currentCoin}`,
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
+    private dropDown(): any {
+        return <Dropdown>
+            <DropdownTrigger>Profile</DropdownTrigger>
+            <DropdownContent>
+                <ul>
+                    <li>
+                        <a href="/profile">BTC</a>
+                    </li>
+                    <li>
+                        <a href="/favorites">Favorites</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Log Out</a>
+                    </li>
+                </ul>
+            </DropdownContent>
+        </Dropdown>
     }
 
     render(){
-        this.renderGraph()
-        return <div>hey</div>
+        return <div>
+            <Line
+                data={{
+                    // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                    datasets: this.graphData(),
+                }}
+                width={400}
+                height={150}
+                options={
+                    {
+                        responsive: true,
+                        title:{
+                            display:true,
+                            text:"BTC vs " + Currency[this.props.currentCoin]
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Date'
+                                },
+                                ticks: {
+                                    major: {
+                                        fontStyle: "bold",
+                                        fontColor: "#FF0000"
+                                    }
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'value'
+                                }
+                            }]
+                        }
+                    }
+                }
+        /></div>
 
     }
 }
