@@ -30,7 +30,7 @@ class Root extends Component<{}, RootState> {
     }
 
     indexExchangeRates(): void {
-        let url = `http://localhost:${apiConfig.port}${apiConfig.indexExchangeRatesPath}`;
+        let url = `${apiConfig.indexExchangeRatesPath}`;
         console.log("Getting up to date exchange rates");
         fetch(url)
         .then(res => res.json())

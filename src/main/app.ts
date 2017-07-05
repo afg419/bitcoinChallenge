@@ -35,25 +35,19 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-if (process.env.NODE_ENV !== 'production') {
-    const webpack = require('webpack');
-    const webpackDevMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
-    const config = require('../../webpack.config.js');
-    const compiler = webpack(config);
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const config = require('../../webpack.config.js');
+const compiler = webpack(config);
 
-    app.use(webpackHotMiddleware(compiler));
-    app.use(webpackDevMiddleware(compiler, {
-        noInfo: true,
-        publicPath: config.output.publicPath
-    }));
-}
+app.use(webpackHotMiddleware(compiler));
+app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+}));
 
 app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
-app.get('/', function (req, res) {
-    console.log(__dirname);
-    res.sendFile(path.join(__dirname, '../../index.html'))
-});
 
 let mongoClient: MongoDBClient = new MongoDBClient();
 let bitcoinClient: BitcoinClient = new BitcoinClient(serverConfig.coinbase );
@@ -65,8 +59,12 @@ let exchangeRatesController: ExchangeRatesController = new ExchangeRatesControll
 
 let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController);
 
-
 app.use('/', appRouter.expressRouter);
+
+app.get('/', function (req, res) {
+    console.log(__dirname);
+    res.sendFile(path.join(__dirname, '../../index.html'))
+});
 app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '../../index.html')) });
 
 

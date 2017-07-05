@@ -10,7 +10,7 @@ export class ApplicationRouter {
         this.exchangeRatesController = exchangeRatesController;
 
         expressRouter.get(
-            apiConfig.indexExchangeRatesPath,
+            "/"+apiConfig.indexExchangeRatesPath,
             (req, res, next) => exchangeRatesController.indexExchangeRates(req, res, next)
         )
     }
