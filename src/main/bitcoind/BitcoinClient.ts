@@ -7,11 +7,11 @@ export class BitcoinClient {
     private readonly client;
 
     constructor(coinbaseConfig: { apiKey: string, apiSecret: string}){
-        this.client = new CoinbaseClient({'apiKey': coinbaseConfig.apiKey, 'apiSecret': coinbaseConfig.apiSecret});
-        this.client.getAccounts({}, (err, accounts) => {
-            console.log("err:" + err)
-            console.log(accounts)
-        });
+        // this.client = new CoinbaseClient({'apiKey': coinbaseConfig.apiKey, 'apiSecret': coinbaseConfig.apiSecret});
+        // this.client.getAccounts({}, (err, accounts) => {
+        //     console.log("err:" + err)
+        //     console.log(accounts)
+        // });
     }
 
     createAccount(account: string): Promise<BitcoinAccount> {
