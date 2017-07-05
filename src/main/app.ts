@@ -1,6 +1,3 @@
-
-
-
 import { MongoDBClient } from "./db/clients/MongoDBClient";
 import { CoinCapTickerClient } from "./apiClients/CoinCapTickerClient";
 import { BTCETickerClient } from "./apiClients/BTCETickerClient";
@@ -13,7 +10,6 @@ import {Router} from "express";
 import {ApplicationRouter} from "./ApplicationRouter";
 import {DeleteTickerWorker} from "./jobs/DeleteTickerWorker";
 let apiConfig = require("../../api/apiConfig");
-// let bitcoin = require('bitcoin');
 const port = apiConfig.port;
 
 const Runnr = require('node-runnr');
@@ -23,7 +19,6 @@ const bodyParser = require('body-parser');
 fetch.Promise = require('bluebird');
 const path = require('path');
 import * as express from 'express';
-import {bitcoinConfig} from "./config/BitcoinConfig";
 import {BitcoinClient} from "./bitcoind/BitcoinClient";
 let router: Router = express.Router();
 
@@ -35,37 +30,31 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//configure webpack
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('../../webpack.config.js');
 const compiler = webpack(config);
-
 app.use(webpackHotMiddleware(compiler));
 app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath
 }));
 
-app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
+app.use(express.static(path.join(__dirname, '../app')));
 
 let mongoClient: MongoDBClient = new MongoDBClient();
-let bitcoinClient: BitcoinClient = new BitcoinClient(serverConfig.coinbase );
 
 let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
     serverConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
 );
 
 let appRouter = new ApplicationRouter(router, apiConfig, exchangeRatesController);
-
 app.use('/', appRouter.expressRouter);
-
-app.get('/', function (req, res) {
-    console.log(__dirname);
+app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '../../index.html'))
 });
-app.get('/*', function (req, res) { res.sendFile(path.join(__dirname, '../../index.html')) });
-
 
 app.listen(port, function () {
     mongoClient.initializeDb(port, db.mongo.url);

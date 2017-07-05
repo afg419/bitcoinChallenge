@@ -62,14 +62,14 @@ class Root extends Component<{}, RootState> {
             .filter( er => appConfig.apiNames.indexOf(er.apiName) > -1)
     }
 
-    pollForUpToDateExchangeRates(): void {
+    private pollForUpToDateExchangeRates(): void {
         setInterval(() => {
           this.indexExchangeRates();
             console.log("exchanges")
         }, appConfig.pollServerForExchangeRatesJob.runEvery*1000)
     }
 
-    selectCurrentCoin(currency: Currency ): void {
+    private selectCurrentCoin(currency: Currency ): void {
         this.setState({ currentCoin: currency })
     }
 

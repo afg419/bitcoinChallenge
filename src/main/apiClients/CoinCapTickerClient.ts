@@ -11,10 +11,6 @@ export class CoinCapTickerClient extends ExchangeRateApiClient {
         super(apiUrl, sourceCurrencies, targetCurrencies);
     }
 
-    private createKeys(currencies: Currency[]): CoinCapKey[]{
-        return currencies.map(currency => new CoinCapKey(currency));
-    }
-
     getCryptoExchangePath(): string {
         return this.apiUrl;
     }

@@ -35,15 +35,6 @@ export class ExchangeRateProcesses {
         return _.uniq(toReturn);
     }
 
-    static getApisInHistory(exchangeHistory: { [key:string]: { [key:string]: ICryptoExchangeRate[]}; }): string[]{
-        if(isNullOrUndefined(exchangeHistory)){return []}
-        let toReturn: string[] = [];
-        for( let apiName in exchangeHistory ){
-            toReturn.push(apiName)
-        }
-        return _.uniq(toReturn);
-    }
-
     //returns exchange rates as such { apiName: { target: [ exchanges ] } }
     static formatExchangeRateHistory(startDate: Date, endDate: Date, exchangeRates: ICryptoExchangeRate[]): { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } {
         //filters out out of date exchanges, and sorts them by date descending

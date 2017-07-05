@@ -15,7 +15,7 @@ export class CoinSelect extends Component<CoinSelectProps, {}> {
         super()
     }
 
-    activatedColor(currency: any){
+    private activatedColor(currency: any){
         if(this.props.currentCoin.toString() === currency){
             return "lightblue";
         } else {
@@ -23,7 +23,7 @@ export class CoinSelect extends Component<CoinSelectProps, {}> {
         }
     }
 
-    buttons(): any[]{
+    private buttons(): any[]{
         let toReturn = [];
         for(let currency in this.props.allCoins){
             toReturn.push(

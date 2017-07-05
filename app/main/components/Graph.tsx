@@ -34,10 +34,6 @@ export class Graph extends Component<GraphProps, {}> {
         return dataToReturn;
     }
 
-    private _onSelect(it){
-        console.log(it);
-    }
-
     render(){
         return <div>
             <Line

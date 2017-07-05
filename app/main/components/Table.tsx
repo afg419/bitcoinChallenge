@@ -18,7 +18,7 @@ export class Table extends Component<TableProps, {}> {
         super()
     }
 
-    apiRankingRow(coinExchangeRates: ICryptoExchangeRate[], currency: Currency){
+    private apiRankingRow(coinExchangeRates: ICryptoExchangeRate[], currency: Currency){
         return <ul key={currency}>
             {this.apiRankingCell(coinExchangeRates[0])}
             {this.apiRankingCell(coinExchangeRates[1])}
@@ -26,7 +26,7 @@ export class Table extends Component<TableProps, {}> {
         </ul>
     }
 
-    apiRankingCell(cryptoExchangeRate: ICryptoExchangeRate){
+    private apiRankingCell(cryptoExchangeRate: ICryptoExchangeRate){
         if(isNullOrUndefined(cryptoExchangeRate)){
             return "--"
         }
