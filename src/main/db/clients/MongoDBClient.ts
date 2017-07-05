@@ -38,6 +38,11 @@ export class MongoDBClient implements DBClient {
 
     deleteExchangesOlderThan(startTime: Date): Promise<WriteOpResult> {
         return CryptoExchangeRateDao.find({$and:[{date:{$lte:startTime}}]})
-            .remove( exchangeRates => exchangeRates.remove()).exec()
+            .remove( err => {
+                if(err){
+                    console.log(err)
+                }
+            })
+            .exec()
     }
 }
