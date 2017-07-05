@@ -6,6 +6,6 @@ module.exports = {
     env: process.env.NODE_ENV || 'development',
     port: process.env.PORT || 3000,
     mongo: {
-        url: 'mongodb://localhost/bitcoinChallenge'
+        url: process.env.MONGODB_URI || 'mongodb://localhost/bitcoinChallenge'
     }
 };
