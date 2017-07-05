@@ -109,26 +109,7 @@ describe('Exchange rate processes', () => {
 
         let coins = ExchangeRateProcesses.getCoinsInHistory(history)
 
-        expect(coins.sort()).to.eql([Currency[Currency.ETH], Currency[Currency.DSH]].sort());
-    });
-
-    it('should get coin history by api', () => {
-        let poloniexCryptos: ICryptoExchangeRate[] = [];
-        let coinCapCryptos: ICryptoExchangeRate[] = [];
-
-        poloniexCryptos[1] = makeCryptoExchangeRateForRank(now, poloniex, Currency.ETH, 0.11); //this guy vs
-        coinCapCryptos[0] = makeCryptoExchangeRateForRank(now, coinCap, Currency.ETH, 0.10); //this guy
-
-        poloniexCryptos[2] = makeCryptoExchangeRateForRank(now, poloniex, Currency.DSH, 0.4); //This guy vs
-        coinCapCryptos[2] = makeCryptoExchangeRateForRank(then, coinCap, Currency.DSH, 0.56); //this guy
-
-        poloniexCryptos[0] = makeCryptoExchangeRateForRank(then, poloniex, Currency.ETH, 1);
-        coinCapCryptos[1] = makeCryptoExchangeRateForRank(earlier, coinCap, Currency.DSH, 1);
-
-        let history = ExchangeRateProcesses.formatExchangeRateHistory(earlier, now, poloniexCryptos.concat(coinCapCryptos))
-
-        let coinHistory = ExchangeRateProcesses.getCoinHistoryByApi(Currency.ETH, history);
-        expect(coinHistory).to.eq(3);
+        expect(coins.sort()).to.eql([Currency.ETH, Currency.DSH].sort());
     });
 
     //the history in this one will have coinCap with no DSH coins, we expect poloniex to just win.
