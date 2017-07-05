@@ -15,7 +15,6 @@ export class MongoDBClient implements DBClient {
         mongoose.connection.on('open', function(err) {
             if (err) {
                 console.error(err);
-                // log.error('Mongoose default connection error: ' + err);
                 process.exit(1);
             }
 
