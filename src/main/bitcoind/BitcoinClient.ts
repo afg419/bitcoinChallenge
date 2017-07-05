@@ -10,6 +10,10 @@ export class BitcoinClient {
 
     constructor(coinbaseConfig: { apiKey: string, apiSecret: string}){
         this.client = new CoinbaseClient({'apiKey': coinbaseConfig.apiKey, 'apiSecret': coinbaseConfig.apiSecret});
+        this.client.getAccounts({}, (err, accounts) => {
+            console.log("err:" + err)
+            console.log(accounts)
+        });
     }
 
     createAccount(account: string): Promise<BitcoinAccount> {
@@ -36,7 +40,7 @@ export class BitcoinClient {
     indexBitcoinAccounts(): Promise<BitcoinAccount[]>{
         return this.client.cmd('listreceivedbyaccount', 0, true, function(err, accounts, resHeaders) {
             if (err) return console.log(err);
-            console.log('Balance:', accounts);
+            console.log('Accounts:', accounts);
         });
     }
 }
