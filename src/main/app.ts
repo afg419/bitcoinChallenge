@@ -13,7 +13,7 @@ import {Router} from "express";
 import {ApplicationRouter} from "./ApplicationRouter";
 import {DeleteTickerWorker} from "./jobs/DeleteTickerWorker";
 let apiConfig = require("../../api/apiConfig");
-let bitcoin = require('bitcoin');
+// let bitcoin = require('bitcoin');
 const port = apiConfig.port;
 
 const Runnr = require('node-runnr');

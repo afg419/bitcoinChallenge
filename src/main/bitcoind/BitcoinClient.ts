@@ -1,9 +1,7 @@
 import {BitcoinConfig} from "../config/BitcoinConfig";
 import {BitcoinAccount} from "../models/BitcoinAccount";
-let bitcoin = require('bitcoin');
-const CoinbaseClient = require('coinbase').Client;
-
-
+// let bitcoin = require('bitcoin');
+// const CoinbaseClient = require('coinbase').Client;
 
 export class BitcoinClient {
     private readonly client;
