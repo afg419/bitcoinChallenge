@@ -31,7 +31,6 @@ class Root extends Component<{}, RootState> {
 
     indexExchangeRates(): void {
         let url = `${apiConfig.indexExchangeRatesPath}`;
-        console.log("Getting up to date exchange rates");
         fetch(url)
         .then(res => res.json())
         .then(rawExchangeRates => this.formValidExchanges(rawExchangeRates))

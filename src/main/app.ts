@@ -52,7 +52,6 @@ app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
 let mongoClient: MongoDBClient = new MongoDBClient();
 let bitcoinClient: BitcoinClient = new BitcoinClient(serverConfig.coinbase );
 
-
 let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
     serverConfig.defaultMinutesBackForExchangeRateQuery, mongoClient
 );
