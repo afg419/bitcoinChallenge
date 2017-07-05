@@ -15,11 +15,20 @@ export class CoinSelect extends Component<CoinSelectProps, {}> {
         super()
     }
 
+    activatedColor(currency: any){
+        if(this.props.currentCoin.toString() === currency){
+            return "lightblue";
+        } else {
+            return "blue";
+        }
+    }
+
     buttons(): any[]{
         let toReturn = [];
         for(let currency in this.props.allCoins){
             toReturn.push(
                 <button
+                    style={{backgroundColor: this.activatedColor(currency), color: "white", fontSize: 14}}
                     key={currency}
                     onClick={ () => this.props.selectCurrentCoin(currency) }>{Currency[currency]}
                 </button>
@@ -29,6 +38,9 @@ export class CoinSelect extends Component<CoinSelectProps, {}> {
     }
 
     render(){
-        return <div>{this.buttons()}</div>
+        return <div>
+            <h3>Select currency</h3>
+            {this.buttons()}
+        </div>
     }
 }

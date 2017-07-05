@@ -18,10 +18,10 @@ interface RootState {
 class Root extends Component<{}, RootState> {
     constructor(){
         super();
+        this.state = ({ currentCoin: Currency.ETH, formattedExchangeRates: {} }) ;
     }
 
     componentDidMount(): void {
-        this.setState({ currentCoin: Currency.ETH, formattedExchangeRates: {} }) ;
         if(appConfig.pollServerForExchangeRatesJob.shouldRun){
           console.log("polling!");
           this.pollForUpToDateExchangeRates();
@@ -32,26 +32,35 @@ class Root extends Component<{}, RootState> {
     indexExchangeRates(): void {
         let url = `http://localhost:${apiConfig.port}${apiConfig.indexExchangeRatesPath}`;
         console.log("Getting up to date exchange rates");
-        fetch(url).then(
-          res => res.json()
-        ).then(rawExchangeRates => {
-          return rawExchangeRates.map( ier => {
-                return new ICryptoExchangeRate (
-                      new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName
-                  )
-              }
-          ).filter(er => er.valid());
-        }).then(exchangeRates => {
-          let now = new Date();
-          let then = new Date(now);
-          then.setMinutes(now.getMinutes() - appConfig.minutesBackForExchangeRateGraphs*1000);
+        fetch(url)
+        .then(res => res.json())
+        .then(rawExchangeRates => this.formValidExchanges(rawExchangeRates))
+        .then( validExchanges => this.filterExchangesByConfigValues(validExchanges))
+        .then(exchangeRates => {
+              let now = new Date();
+              let then = new Date(now);
+              then.setMinutes(now.getMinutes() - appConfig.minutesBackForExchangeRateGraphs*1000);
 
-          let formattedExchangeRates : { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } = ExchangeRateProcesses.formatExchangeRateHistory(then, now, exchangeRates as ICryptoExchangeRate[])
+              let formattedExchangeRates : { [key:string]: { [key:string]: ICryptoExchangeRate[]}; } = ExchangeRateProcesses.formatExchangeRateHistory(then, now, exchangeRates as ICryptoExchangeRate[])
 
-          this.setState({ formattedExchangeRates: formattedExchangeRates });
+              this.setState({ formattedExchangeRates: formattedExchangeRates });
         }).catch( err => {
           console.error("Exception while querying for most up to date exchange rates: " + err);
         })
+    }
+
+    private formValidExchanges(rawExchangeRates: any[]): ICryptoExchangeRate[] {
+        return rawExchangeRates.map( ier => {
+            return new ICryptoExchangeRate (
+                new Date(ier.date), ier.source, ier.target, ier.rate, ier.apiName
+            )
+        }).filter(er => er.valid())
+    }
+
+    private filterExchangesByConfigValues(exchanges: ICryptoExchangeRate[]): ICryptoExchangeRate[] {
+        return exchanges
+            .filter( er => appConfig.targetCoins.indexOf(parseInt(er.target.toString())) > -1)
+            .filter( er => appConfig.apiNames.indexOf(er.apiName) > -1)
     }
 
     pollForUpToDateExchangeRates(): void {
@@ -65,15 +74,12 @@ class Root extends Component<{}, RootState> {
         this.setState({ currentCoin: currency })
     }
 
-    private allCoins(): Currency[] {
-        return ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates);
-    }
-
     render() {
         return (
-          <div>
+          <div style={{marginLeft: "15px", marginRight: "15px"}}>
+              <h1 style={{textAlign: "center"}}>Bitcoin Exchange Rate Tracker (BTC vs {Currency[this.state.currentCoin]})</h1>
               <CoinSelect
-                    allCoins={this.allCoins()}
+                    allCoins={ExchangeRateProcesses.getCoinsInHistory(this.state.formattedExchangeRates)}
                     currentCoin={this.state.currentCoin}
                     selectCurrentCoin={ this.selectCurrentCoin.bind(this) }
               />
@@ -95,15 +101,4 @@ class Root extends Component<{}, RootState> {
 }
 
 render(<Root />, document.getElementById('main'))
-
-
-// componentWillMount
-// render
-// componentDidMount
-//
-// componentWillReceiveProps
-// componentShouldUpdate
-
-
-
 

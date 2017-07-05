@@ -36,7 +36,7 @@ export class Table extends Component<TableProps, {}> {
     render(){
         let {currentCoin} = this.props;
         return (<div>
-            <h2>Exchange rates for BTC to { Currency[currentCoin] }</h2>
+            <h4>Current exchanges rates</h4>
             <div className="rankings">
                 {this.apiRankingRow(ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, currentCoin), currentCoin)}
             </div>

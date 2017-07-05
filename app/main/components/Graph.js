@@ -33,7 +33,7 @@ class Graph extends react_1.Component {
         return React.createElement("div", null,
             React.createElement(react_chartjs_2_1.Line, { data: {
                     datasets: this.graphData(),
-                }, width: 400, height: 150, options: {
+                }, width: 400, height: 120, options: {
                     responsive: true,
                     title: {
                         display: true,

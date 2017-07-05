@@ -30,9 +30,7 @@ class Table extends react_1.Component {
     render() {
         let { currentCoin } = this.props;
         return (React.createElement("div", null,
-            React.createElement("h2", null,
-                "Exchange rates for BTC to ",
-                Currency_1.Currency[currentCoin]),
+            React.createElement("h4", null, "Current exchanges rates"),
             React.createElement("div", { className: "rankings" }, this.apiRankingRow(ExchangeRateProcesses_1.ExchangeRateProcesses.getApisForTargetCurrencyInOrderOfPerformance(this.props.formattedExchangeRates, currentCoin), currentCoin))));
     }
 }

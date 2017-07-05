@@ -45,7 +45,7 @@ export class Graph extends Component<GraphProps, {}> {
                     datasets: this.graphData(),
                 }}
                 width={400}
-                height={150}
+                height={120}
                 options={
                     {
                         responsive: true,
