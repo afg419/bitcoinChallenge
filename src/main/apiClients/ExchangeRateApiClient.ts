@@ -2,7 +2,7 @@ import {Currency} from "../../../api/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 var fetch = require('node-fetch');
 
-export abstract class CryptoTickerClient{
+export abstract class ExchangeRateApiClient{
     readonly apiUrl: string;
     readonly apiName: string;
     readonly sourceCurrencies: Currency[];
@@ -15,16 +15,16 @@ export abstract class CryptoTickerClient{
     }
 
     getCryptoExchange(): Promise<CryptoExchangeRate[]> {
-        console.log(this.appendPathToUrl());
-        return fetch(this.appendPathToUrl())
+        console.log(this.getCryptoExchangePath());
+        return fetch(this.getCryptoExchangePath())
             .then(res => res.json())
-            .then(json => this.normalizeResponse(new Date(), json))
+            .then(json => this.normalizeExchangeRatesResponse(new Date(), json))
             .catch(err => {
                 console.error(`Unable to acquire exchanges for ${this.apiName}. ${err}`);
                 throw err
             });
     }
 
-    abstract normalizeResponse(now: Date, json: any): CryptoExchangeRate[];
-    abstract appendPathToUrl(): string;
+    abstract normalizeExchangeRatesResponse(now: Date, json: any): CryptoExchangeRate[];
+    abstract getCryptoExchangePath(): string;
 }

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { CoinCapTickerClient } from "../../main/cryptoTickers/CoinCapTickerClient";
+import { CoinCapTickerClient } from "../../main/apiClients/CoinCapTickerClient";
 import { testConfig } from "../TestConfig"
 var fetch = require('node-fetch');
 
@@ -9,12 +9,12 @@ describe('Gets and Normalizes CryptoExchanges', () => {
     let underTest = new CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
 
     it('should leave url untouched', () => {
-        expect(underTest.appendPathToUrl()).to.equal(underTest.apiUrl)
+        expect(underTest.getCryptoExchangePath()).to.equal(underTest.apiUrl)
     });
 
     it('should process valid data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, sampleCoinCapResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, sampleCoinCapResponse);
         expect(response.length).to.equal(sourceCoins.length * targetCoins.length);
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -25,7 +25,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore missing target currency data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, missingLTCResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, missingLTCResponse);
         expect(response.length).to.equal(sourceCoins.length * (targetCoins.length - 1));
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -36,7 +36,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore invalid target currency data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, invalidLTCResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, invalidLTCResponse);
         expect(response.length).to.equal(sourceCoins.length * (targetCoins.length - 1));
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -47,7 +47,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore missing source currency data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, missingBTCResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, missingBTCResponse);
         expect(response.length).to.equal((sourceCoins.length -1) * (targetCoins.length));
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -58,7 +58,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore invalid source currency data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, invalidBTCResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, invalidBTCResponse);
         expect(response.length).to.equal((sourceCoins.length -1) * (targetCoins.length));
         response.forEach(x => {
             expect(x.date).to.eql(now);

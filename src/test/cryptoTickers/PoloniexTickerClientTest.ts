@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { CoinCapTickerClient } from "../../main/cryptoTickers/CoinCapTickerClient";
-import {PoloniexTickerClient} from "../../main/cryptoTickers/PoloniexTickerClient";
+import { CoinCapTickerClient } from "../../main/apiClients/CoinCapTickerClient";
+import {PoloniexTickerClient} from "../../main/apiClients/PoloniexTickerClient";
 import { testConfig } from "../TestConfig"
 import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
@@ -14,7 +14,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
     let underTest = new PoloniexTickerClient(poloniex.baseUrl, sourceCoins, targetCoins);
 
     it('should not customize url', () => {
-        expect(underTest.appendPathToUrl()).to.equal(underTest.apiUrl)
+        expect(underTest.getCryptoExchangePath()).to.equal(underTest.apiUrl)
     });
 
     it('should have correct keys', () => {
@@ -26,7 +26,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should process valid data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, samplePoloniexResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, samplePoloniexResponse);
         expect(response.length).to.equal(underTest.exchangeKeys.length);
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -37,7 +37,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore invalid data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, ltcBtcMissingAskResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, ltcBtcMissingAskResponse);
         expect(response.length).to.equal(underTest.exchangeKeys.length - 1);
         response.forEach(x => {
             expect(x.date).to.eql(now);

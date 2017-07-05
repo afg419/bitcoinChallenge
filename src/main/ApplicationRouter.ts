@@ -6,7 +6,6 @@ export class ApplicationRouter {
     private readonly exchangeRatesController: ExchangeRatesController;
 
     constructor(expressRouter: Router, apiConfig: { indexExchangeRatesPath: string }, exchangeRatesController: ExchangeRatesController){
-        console.log("why are they already making me!");
         this.expressRouter = expressRouter;
         this.exchangeRatesController = exchangeRatesController;
 

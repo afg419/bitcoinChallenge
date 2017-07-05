@@ -30,6 +30,11 @@ export class ServerConfig {
         runEvery: '3600', //seconds, 1 hour
         deleteOlderThan: 3600
     };
+
+    coinbase = {
+        apiKey: "cyfdlfGTdsKoUaxi",
+        apiSecret: process.env.COINBASE_SECRET || ""
+    }
 }
 
 export let serverConfig = new ServerConfig();

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {BTCETickerClient} from "../../main/cryptoTickers/BTCETickerClient";
+import {BTCETickerClient} from "../../main/apiClients/BTCETickerClient";
 import { testConfig } from "../TestConfig"
 import {Currency} from "../../../api/Currency";
 import {isNullOrUndefined} from "util";
@@ -20,12 +20,12 @@ describe('Gets and Normalizes CryptoExchanges', () => {
     });
 
     it('should append path of keys to url', () => {
-        expect(underTest.appendPathToUrl()).to.equal(underTest.apiUrl+ "/eth_btc-dsh_btc-ltc_btc")
+        expect(underTest.getCryptoExchangePath()).to.equal(underTest.apiUrl+ "/eth_btc-dsh_btc-ltc_btc")
     });
 
     it('should process valid data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, sampleBtceResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, sampleBtceResponse);
         expect(response.length).to.equal(underTest.exchangeKeys.length);
         response.forEach(x => {
             expect(x.date).to.eql(now);
@@ -36,7 +36,7 @@ describe('Gets and Normalizes CryptoExchanges', () => {
 
     it('should ignore invalid data', () => {
         let now = new Date();
-        let response = underTest.normalizeResponse(now, ethBtcMissingBuyResponse);
+        let response = underTest.normalizeExchangeRatesResponse(now, ethBtcMissingBuyResponse);
         expect(response.length).to.equal(underTest.exchangeKeys.length - 1);
         response.forEach(x => {
             expect(x.date).to.eql(now);

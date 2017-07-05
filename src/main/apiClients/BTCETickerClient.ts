@@ -1,10 +1,10 @@
-import {CryptoTickerClient} from "./CryptoTickerClient";
+import {ExchangeRateApiClient} from "./ExchangeRateApiClient";
 import {Currency} from "../../../api/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
 import {TypeValidator} from "../../../api/TypeValidator";
 
-export class BTCETickerClient extends CryptoTickerClient {
+export class BTCETickerClient extends ExchangeRateApiClient {
     readonly apiName: string = "BTC-e";
     readonly exchangeKeys: BTCEKey[];
 
@@ -23,12 +23,12 @@ export class BTCETickerClient extends CryptoTickerClient {
         return toReturn;
     }
 
-    appendPathToUrl(): string {
+    getCryptoExchangePath(): string {
         let keyPath = this.exchangeKeys.map(key => key.getKey()).join("-");
         return `${this.apiUrl}/${keyPath}`;
     }
 
-    normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
+    normalizeExchangeRatesResponse(now: Date, json: any): CryptoExchangeRate[] {
         return this.exchangeKeys.map( key => {
             let btceBlock = new BTCEResponseBlock(json[key.getKey()]);
 

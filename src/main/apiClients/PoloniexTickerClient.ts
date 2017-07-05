@@ -1,10 +1,10 @@
 import {Currency} from "../../../api/Currency";
-import { CryptoTickerClient } from "./CryptoTickerClient";
+import { ExchangeRateApiClient } from "./ExchangeRateApiClient";
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
 import {TypeValidator} from "../../../api/TypeValidator";
 
-export class PoloniexTickerClient extends CryptoTickerClient {
+export class PoloniexTickerClient extends ExchangeRateApiClient {
     readonly apiName: string = "Poloniex";
     readonly exchangeKeys: PoloniexKey[];
 
@@ -23,11 +23,11 @@ export class PoloniexTickerClient extends CryptoTickerClient {
         return toReturn;
     }
 
-    appendPathToUrl(): string {
+    getCryptoExchangePath(): string {
         return this.apiUrl;
     }
 
-    normalizeResponse(now: Date, json: any): CryptoExchangeRate[] {
+    normalizeExchangeRatesResponse(now: Date, json: any): CryptoExchangeRate[] {
         return this.exchangeKeys.map(key => {
             let poloniexBlock = new PoloniexResponseBlock(json[key.getKey()]);
 

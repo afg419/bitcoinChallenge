@@ -1,16 +1,16 @@
 import { CryptoExchangeRate } from "../models/CryptoExchangeRate";
-import { CryptoTickerClient } from "../cryptoTickers/CryptoTickerClient";
+import { ExchangeRateApiClient } from "../apiClients/ExchangeRateApiClient";
 import {DBClient} from "../db/clients/DBClient";
 
 export class CryptoTickerWorker implements JobWorker {
-    private readonly clients: CryptoTickerClient[];
+    private readonly clients: ExchangeRateApiClient[];
     private readonly dbClient: DBClient;
 
     readonly run: () => void = () => {
         this.getAndSaveCurrentExchangeRates()
     };
 
-    constructor(clients: CryptoTickerClient[], dbClient: DBClient){
+    constructor(clients: ExchangeRateApiClient[], dbClient: DBClient){
         console.log("New ticker client!");
         this.clients = clients;
         this.dbClient = dbClient;

@@ -1,32 +1,36 @@
+
+
+
 import { MongoDBClient } from "./db/clients/MongoDBClient";
-const Runnr = require('node-runnr');
-import { CoinCapTickerClient } from "./cryptoTickers/CoinCapTickerClient";
-import { BTCETickerClient } from "./cryptoTickers/BTCETickerClient";
-import { PoloniexTickerClient } from "./cryptoTickers/PoloniexTickerClient";
+import { CoinCapTickerClient } from "./apiClients/CoinCapTickerClient";
+import { BTCETickerClient } from "./apiClients/BTCETickerClient";
+import { PoloniexTickerClient } from "./apiClients/PoloniexTickerClient";
 import { CryptoTickerWorker } from "./jobs/CryptoTickerWorker";
-
-let apiConfig = require("../../api/apiConfig")
-
-var fetch = require('node-fetch');
-fetch.Promise = require('bluebird')
-const path = require('path');
-import * as express from 'express';
-let router: Router = express.Router();
 import { serverConfig, ServerConfig } from "./config/ServerConfig";
 import {DBClient} from "./db/clients/DBClient";
 import {ExchangeRatesController} from "./controllers/ExchangeRatesController";
 import {Router} from "express";
 import {ApplicationRouter} from "./ApplicationRouter";
 import {DeleteTickerWorker} from "./jobs/DeleteTickerWorker";
+let apiConfig = require("../../api/apiConfig");
+let bitcoin = require('bitcoin');
+const port = apiConfig.port;
 
+const Runnr = require('node-runnr');
+const fetch = require('node-fetch');
 const cors = require('express-cors');
-const bodyParser = require('body-parser')
-const port = apiConfig.port //(process.env.PORT || 3000);
-const app = express();
-// import  from './router';
+const bodyParser = require('body-parser');
+fetch.Promise = require('bluebird');
+const path = require('path');
+import * as express from 'express';
+import {bitcoinConfig} from "./config/BitcoinConfig";
+import {BitcoinClient} from "./bitcoind/BitcoinClient";
+let router: Router = express.Router();
+
 const db = require('./db/index');
 const mongoose = require('mongoose');
 
+const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -47,11 +51,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use('/assets', express.static(path.join(__dirname, '../app/assets')));
 app.get('/', function (req, res) {
-    console.log(__dirname)
+    console.log(__dirname);
     res.sendFile(path.join(__dirname, '../../index.html'))
 });
 
-let mongoClient = new MongoDBClient();
+let mongoClient: MongoDBClient = new MongoDBClient();
+let bitcoinClient: BitcoinClient = new BitcoinClient(serverConfig.coinbase );
+
 
 let exchangeRatesController: ExchangeRatesController = new ExchangeRatesController(
     serverConfig.defaultMinutesBackForExchangeRateQuery, mongoClient

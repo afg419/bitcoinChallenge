@@ -2,7 +2,6 @@ import {DBClient} from "./DBClient";
 import {CryptoExchangeRate} from "../../models/CryptoExchangeRate";
 import {CryptoExchangeRateDao} from "../../models/schemas/CryptoExchangeRateSchema";
 import * as mongoose from "mongoose";
-import {start} from "repl";
 import {WriteOpResult} from "mongodb";
 
 export class MongoDBClient implements DBClient {
@@ -21,7 +20,6 @@ export class MongoDBClient implements DBClient {
             console.log(`ready to accept connections on port ${port}`);
         });
         mongoose.connect(host);
-
     }
 
     createExchange(exchangeRate: CryptoExchangeRate): Promise<CryptoExchangeRate> {

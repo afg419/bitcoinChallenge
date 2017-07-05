@@ -1,10 +1,10 @@
-import {CryptoTickerClient} from "./CryptoTickerClient";
+import {ExchangeRateApiClient} from "./ExchangeRateApiClient";
 import {Currency} from "../../../api/Currency";
 import {CryptoExchangeRate} from "../models/CryptoExchangeRate";
 import {isNullOrUndefined} from "util";
 import {TypeValidator} from "../../../api/TypeValidator";
 
-export class CoinCapTickerClient extends CryptoTickerClient {
+export class CoinCapTickerClient extends ExchangeRateApiClient {
     readonly apiName: string = "CoinCap";
 
     constructor(apiUrl: string, sourceCurrencies: Currency[], targetCurrencies: Currency[]){
@@ -15,11 +15,11 @@ export class CoinCapTickerClient extends CryptoTickerClient {
         return currencies.map(currency => new CoinCapKey(currency));
     }
 
-    appendPathToUrl(): string {
+    getCryptoExchangePath(): string {
         return this.apiUrl;
     }
 
-    normalizeResponse(now: Date, jsonArray: any[]): CryptoExchangeRate[] {
+    normalizeExchangeRatesResponse(now: Date, jsonArray: any[]): CryptoExchangeRate[] {
         let toReturn: CryptoExchangeRate[] = [];
 
         this.sourceCurrencies.forEach( sourceCurrency => {
