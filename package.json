@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
     "dev-server": "webpack-dev-server --hot --inline --content-base --history-api-fallback",
-    "start": "npm install && node_modules/.bin/tsc && npm build && node src/main/app.js",
+    "prestart": "npm install",
+    "start": "node_modules/.bin/tsc && npm build && node src/main/app.js",
     "stop": "mongo admin --eval 'db.shutdownServer()' > logs/dblogs.txt",
     "test": "mocha -r ts-node/register src/test/**/*.ts && mocha -r ts-node/register app/test/**/*.ts"
   },
