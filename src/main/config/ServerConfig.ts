@@ -2,7 +2,9 @@ import {Currency} from "../../../api/Currency";
 
 export class ServerConfig {
     sourceCoins: Currency[] = [ Currency.BTC ];
-    targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC ];
+    targetCoins: Currency[] = [ Currency.ETH, Currency.DSH, Currency.LTC];
+
+    apiNames: string[] = ["Poloniex","BTC-e", "CoinCap"];
 
     defaultMinutesBackForExchangeRateQuery = 60;
 

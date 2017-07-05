@@ -82,7 +82,11 @@ function configureTickerWorker(applicationConfig: ServerConfig, mongoClient: DBC
     let btceClient: BTCETickerClient = new BTCETickerClient(btcE.baseUrl, sourceCoins, targetCoins);
     let coinCapClient: CoinCapTickerClient = new CoinCapTickerClient(coinCap.baseUrl, sourceCoins, targetCoins);
 
-    return new CryptoTickerWorker([poloniexClient, btceClient, coinCapClient], mongoClient); //, btceClient, coinCapClient
+    let apiClients = [poloniexClient, btceClient, coinCapClient].filter(
+        client => applicationConfig.apiNames.indexOf(client.apiName) > -1
+    );
+
+    return new CryptoTickerWorker(apiClients, mongoClient); //, btceClient, coinCapClient
 }
 
 function configureDeleteTickerWorker(applicationConfig: ServerConfig, mongoClient: DBClient): DeleteTickerWorker {
