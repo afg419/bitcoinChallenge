@@ -10,10 +10,10 @@
     "src/main/**/*.ts",
     "src/test/**/*.ts",
     "app/main/**/*.ts",
-    "app/main/**/*.tsx"
+    "app/main/**/*.tsx",
+    "api/**/*.ts"
   ],
   "exclude": [
-    "node_modules/",
-    "api/"
+    "node_modules/"
   ]
 }
